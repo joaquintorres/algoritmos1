@@ -1,0 +1,7 @@
+Preguntas:
+¿es pertinente poner la marca de la empresa (Redlink) o es mejor no hacerlo?
+¿puedo juntar la identificacion de la tarjeta con el pago de impuestos y servicios
+ para simplificar el diagrama?
+En el caso de que no reconozca la tarjeta inmediatamente ¿permite volver a ingresarla
+o corre el riesgo de un breach en la seguridad?
+Se puede usar la selección como el rombo+procesos?
