@@ -1,0 +1,16 @@
+#include<stdio.h>
+int main(void){
+	typedef enum{
+		MONDAY,
+		TUESDAY,
+		WEDNESDAY,
+		THURSDAY,
+		FRIDAY,
+		SATURDAY,
+		SUNDAY
+	} dia_t;
+	/*Monday you can fall apart...*/
+	dia_t parcial = WEDNESDAY;
+	printf("%d \n", parcial);
+	return 0;
+	}
