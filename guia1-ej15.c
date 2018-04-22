@@ -6,23 +6,23 @@
 	 */
 
 #include<stdio.h>
-#define AMOUNT_NUMBERS 5
+#define MAX_NUMBERS 5
  
 int main(void)
 {
-	unsigned int i;
-	unsigned int j;
+	size_t i;
 	
-	float partial_sum;
+	
+	float sum;
 	float total = 0;
 	float average;
 	
 	printf("Ingrese %d números para promediar.\n", AMOUNT_NUMBERS);
-	for (i = 0; i < AMOUNT_NUMBERS; i++)
+	for (i = 0, sum=0; i < MAX_NUMBERS; i++)
 	{
-		j = scanf("%f", &partial_sum);
+		int j = scanf("%f", sum);
 		/*ampersand señala la direccion de memoria de la variable
-	 	"partial_sum",j indica si salió bien, pero partial_sum es donde se 
+	 	"sum",j indica si salió bien, pero sum es donde se 
 	 	almacena el input */
 		if (!j)
 		{
@@ -30,14 +30,20 @@ int main(void)
 			return 1;
 		}
 
-		if (partial_sum < 0)
+		if (j == EOF)
+		{
+			fprintf(stderr, "%s\n", "ERROR: Entrada inválida.");
+			return 1;
+		}
+
+		if (sum < 0)
 		{
 			fprintf(stderr, "%s\n", "ERROR: Número negativo.");
 			return 1;
 		}
-		total += partial_sum;
+		total += sum;
 	}
 	average = total / AMOUNT_NUMBERS;
-	printf("El promedio es: %f\n", average);
+	printf("%s %f \n","El promedio es:", average);
 	return 0;
 }
