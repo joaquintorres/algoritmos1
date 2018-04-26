@@ -50,7 +50,7 @@ int main(void)
 		return EXIT_FAILURE;
 	}
 	/*******CÁLCULO*****/
-	if ((exit_status = calculate_capacitor_value(resistor_value_R1, resistor_value_R2,frequency_value,q_factor_value, &capacitor_value_C1, &capacitor_value_C2)) != OK)
+	if ((exit_status = calculate_capacitor_value(resistor_value_R1, resistor_value_R2, &capacitor_value_C1, &capacitor_value_C2)) != OK)
 	{
 		print_error_message(exit_status);
 		return EXIT_FAILURE;
