@@ -36,23 +36,23 @@ status_t read_capacitor_value(const char * msg, float * val);
 ***********************************************************/
 status_t read_capacitor_value (const char * msg, float * val)
 {
-	float result;
-	int j;
+	float user_input;
+	int result;
 	char ch;
 	
 	if (msg == NULL || val == NULL)
 		return ERROR_NULL_POINTER;	
 	
 	printf("%s %s \n", msg, UNIT_CAPACITANCE);
-	j = scanf("%f", &result);
-	if (!j || j == EOF)
+	result = scanf("%f", &user_input);
+	if (!result || result == EOF)
 		return ERROR_INVALID_INPUT;	
 	/*Limpieza del buffer*/
 	while ((ch = getchar())!='\n' && ch != EOF);
 	if (ch == EOF)
 		return ERROR_INPUT_BUFFER;
 	
-	*val = result;
+	*val = user_input;
 	*val *= MULTIPLIER_CAPACITANCE;
 	if(*val < MIN_CAPACITOR_VALUE || *val > MAX_CAPACITOR_VALUE)
 		return ERROR_INVALID_INPUT;
@@ -60,12 +60,3 @@ status_t read_capacitor_value (const char * msg, float * val)
 
 	return OK;
 }
-int main (void)
-{
-	float var;
-	read_capacitor_value("Mensaje: ", &var);
-
-	printf("%s %.20f \n", "IN: ", var);
-	return 0;
-}
-
