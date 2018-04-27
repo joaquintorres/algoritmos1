@@ -48,7 +48,7 @@ status_t read_capacitor_value (const char * msg, float * val)
 	if (!result || result == EOF)
 		return ERROR_INVALID_INPUT;	
 	/*Limpieza del buffer*/
-	while ((ch = getchar())!='\n' && ch != EOF);
+	while ( (ch = getchar()) != '\n' && ch != EOF);
 	if (ch == EOF)
 		return ERROR_INPUT_BUFFER;
 	
