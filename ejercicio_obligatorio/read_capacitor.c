@@ -4,22 +4,23 @@
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
 	Archivo: read_capacitor_value.c
-	Descripción: Función ectura del valor de un capacitor, ingresado por el
-	usuario. 
+	Descripción: Función de lectura del valor de un capacitor, ingresado 
+	por el usuario. 
 	****************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 
 #define UNIT_CAPACITANCE "[nF]"
-#define MIN_CAPACITANCE_VALUE 0.00000000001
-#define MAX_CAPACITANCE_VALUE 0.000047
+#define MIN_CAPACITOR_VALUE 0.00000000001
+#define MAX_CAPACITOR_VALUE 0.000047
 #define MULTIPLIER_CAPACITANCE 0.000000001
 
 
 typedef  enum{
 	OK,
 	ERROR_NULL_POINTER,
-	ERROR_INVALID_INPUT
+	ERROR_INVALID_INPUT,
+	ERROR_INPUT_BUFFER
 	} status_t;
 
 /*************PROTOTIPO*****************/
@@ -35,25 +36,36 @@ status_t read_capacitor_value(const char * msg, float * val);
 ***********************************************************/
 status_t read_capacitor_value (const char * msg, float * val)
 {
-	int scan_success;
 	float result;
+	int j;
+	char ch;
+	
 	if (msg == NULL || val == NULL)
-	{
 		return ERROR_NULL_POINTER;	
-	}
+	
 	printf("%s %s \n", msg, UNIT_CAPACITANCE);
-	scan_success = scanf("%f", &result);
-	if (!scan_success || scan_success == EOF)
-	{
+	j = scanf("%f", &result);
+	if (!j || j == EOF)
 		return ERROR_INVALID_INPUT;	
-	}
+	/*Limpieza del buffer*/
+	while ((ch = getchar())!='\n' && ch != EOF);
+	if (ch == EOF)
+		return ERROR_INPUT_BUFFER;
 	
 	*val = result;
 	*val *= MULTIPLIER_CAPACITANCE;
-	if(*val < MIN_CAPACITANCE_VALUE || *val > MAX_CAPACITANCE_VALUE)
-	{
+	if(*val < MIN_CAPACITOR_VALUE || *val > MAX_CAPACITOR_VALUE)
 		return ERROR_INVALID_INPUT;
-	}
+	
+
 	return OK;
+}
+int main (void)
+{
+	float var;
+	read_capacitor_value("Mensaje: ", &var);
+
+	printf("%s %.20f \n", "IN: ", var);
+	return 0;
 }
 
