@@ -8,8 +8,10 @@
 	ecualizador gráfico. 
 	****************************************************************/
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "main.h"
-
+#include "components.h"
 /**********************************************************
  Esta función toma como argumentos un mensaje para dar al
  usuario y la dirección de una variable sobre la que se escribe
@@ -19,35 +21,27 @@
 ***********************************************************/
 status_t read_resistor_value(const char * msg, double * val)
 {
-	char str[MAX_STR];
+	char str[MAX_STR + 2];
 	char * temp;
 
 	if (msg == NULL || val == NULL)
-	{
 		return ERROR_NULL_POINTER;
-	}
 	
 	printf("%s %s \n", msg, UNIT_RESISTANCE);
 
 
-	if (fgets(str,MAX_STR, stdin) == NULL)
-	{
+	if (fgets(str,MAX_STR + 2, stdin) == NULL)
 		return ERROR_INVALID_DATA;
-	}
 
 	*val = strtod(str, &temp);
 
 	if (*temp && *temp != '\n')
-	{
 		return ERROR_INVALID_DATA;
-	}
 
 	*val *= MULTIPLIER_RESISTANCE;
 
-	if (*val < MIN_RESISTANCE_VALUE  || *val > MAX_RESISTANCE_VALUE || *val == 0)
-	{
+	if (*val < MIN_RESISTOR_VALUE  || *val > MAX_RESISTOR_VALUE)
 		return ERROR_INVALID_DATA;
-	}
 	return OK;
 
 }
@@ -56,67 +50,51 @@ lugar de utilizar funciones diferenciadas, en el caso de que se quiera
 modificar el comportamiento con respecto a estas variables**/
 status_t read_frequency_value(const char * msg, double * val)
 {
-	char str[MAX_STR];
+	char str[MAX_STR + 2];
 	char * temp;
 
 	if (msg == NULL || val == NULL)
-	{
 		return ERROR_NULL_POINTER;
-	}
 	
 	printf("%s %s \n", msg, UNIT_FREQUENCY);
 
 
-	if (fgets(str,MAX_STR, stdin) == NULL)
-	{
+	if (fgets(str,MAX_STR + 2, stdin) == NULL)
 		return ERROR_INVALID_DATA;
-	}
 
 	*val = strtod(str, &temp);
 
 	if (*temp && *temp != '\n')
-	{
 		return ERROR_INVALID_DATA;
-	}
 
 	*val *= MULTIPLIER_FREQUENCY;
 
-	if (*val < MIN_FREQUENCY_VALUE  || *val > MAX_FREQUENCY_VALUE || *val == 0)
-	{
+	if (*val < MIN_FREQUENCY_VALUE  || *val > MAX_FREQUENCY_VALUE)
 		return ERROR_INVALID_DATA;
-	}
 	return OK;
 
 }
-status_t read_q_factor_value(const char * msg, double * val)
+status_t read_quality_factor_value(const char * msg, double * val)
 {
-	char str[MAX_STR];
+	char str[MAX_STR + 2];
 	char * temp;
 
 	if (msg == NULL || val == NULL)
-	{
 		return ERROR_NULL_POINTER;
-	}
 	
 	printf("%s \n", msg);
 
 
-	if (fgets(str,MAX_STR, stdin) == NULL)
-	{
+	if (fgets(str,MAX_STR + 2, stdin) == NULL)
 		return ERROR_INVALID_DATA;
-	}
 
 	*val = strtod(str, &temp);
 
 	if (*temp && *temp != '\n')
-	{
 		return ERROR_INVALID_DATA;
-	}
 
-	if (*val < MIN_Q_FACTOR_VALUE  || *val > MAX_Q_FACTOR_VALUE || *val == 0)
-	{
+	if (*val < MIN_QUALITY_FACTOR_VALUE  || *val > MAX_QUALITY_FACTOR_VALUE)
 		return ERROR_INVALID_DATA;
-	}
 	return OK;
 
 }
@@ -128,18 +106,37 @@ especifica la unidad en la que se debe mostrar el resultado al usuario,
 el multiplicador de la correspondiente unidad a la nueva y el mensaje
 junto al cual se muestra el resultado.
 ****************************************************************/
-status_t print_component_value(double val, const char * unit, const double multiplier, const char * msg)
+status_t print_resistor_value(double val, const char * msg)
 {
-	if (unit == NULL || msg == NULL)
-	{
+	if (msg == NULL)
 		return ERROR_NULL_POINTER;
-	}
-	if (multiplier <= 0)
-	{
-		return ERROR_INVALID_DATA;
-	}
 
-	printf("%s %.2f %s \n", msg, val/multiplier, unit);
+	printf("%s %.2f %s \n", msg, val/MULTIPLIER_RESISTANCE, UNIT_RESISTANCE);
 	return OK;
 }
 
+status_t print_capacitor_value(double val, const char * msg)
+{
+	if (msg == NULL)
+		return ERROR_NULL_POINTER;
+
+	printf("%s %.2f %s \n", msg, val/MULTIPLIER_CAPACITANCE, UNIT_CAPACITANCE);
+	return OK;
+}
+status_t print_frequency_value(double val, const char * msg)
+{
+	if (msg == NULL)
+		return ERROR_NULL_POINTER;
+
+	printf("%s %.2f %s \n", msg, val/MULTIPLIER_FREQUENCY, UNIT_FREQUENCY);
+	return OK;
+}
+
+status_t print_quality_factor_value(double val, const char * msg)
+{
+	if (msg == NULL)
+		return ERROR_NULL_POINTER;
+
+	printf("%s %.2f %s \n", msg, val/MULTIPLIER_QUALITY_FACTOR, UNIT_QUALITY_FACTOR);
+	return OK;
+}
