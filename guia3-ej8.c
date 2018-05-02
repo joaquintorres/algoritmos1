@@ -24,13 +24,16 @@ int main(void)
 	cmp_value = strcmp(str_a, str_b);
 	printf("%d\n", cmp_value);
 	/*seteo el contador en el último caracter*/
-	for (i = 0; str_a[i] == str_b[i]; i++);
+	for (i = 0; str_a[i] == str_b[i]; i++){
+		if (str_a[i] == '\n' || str_b[i] == '\n')
+			break;
+	}
+		
 	/*paso el último caracter de c u a int*/
 	ch_val_a = (int)str_a[i];
 	ch_val_b = (int)str_b[i];
 	
 	printf("%d\n", ch_val_a - ch_val_b);
-	/*printf("%d\n", i);*/
 
 	return 0;
 }
