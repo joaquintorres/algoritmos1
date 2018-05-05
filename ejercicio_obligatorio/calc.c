@@ -26,21 +26,6 @@ status_t calculate_capacitor_C1(double res_val_R1,double res_val_R2,double freq,
 
 	if(cap_val_C1 == NULL)
 		return ERROR_NULL_POINTER;
-
-	/*Estas validaciones son redundantes por cómo se obtuvieron los datos, pero la
-	función tiene que ser a prueba de todo */
-	if (res_val_R1 < MIN_RESISTOR_VALUE || res_val_R1 > MAX_RESISTOR_VALUE )
-		return ERROR_INVALID_DATA;
-
-	if (res_val_R2 < MIN_RESISTOR_VALUE || res_val_R2 > MAX_RESISTOR_VALUE )
-		return ERROR_INVALID_DATA;
-	
-	if (freq < MIN_FREQUENCY_VALUE || freq > MAX_FREQUENCY_VALUE )
-		return ERROR_INVALID_DATA;
-	
-	if (q < MIN_QUALITY_FACTOR_VALUE || q > MAX_QUALITY_FACTOR_VALUE )
-		return ERROR_INVALID_DATA;
-	/**************************/
 	
 	/*L inductancia equivalente---> paso intermedio*/
 	 
@@ -61,17 +46,6 @@ status_t calculate_capacitor_C2(double res_val_R1, double res_val_R2, double fre
 {
 	if(cap_val_C2 == NULL)
 		return ERROR_NULL_POINTER;
-
-	
-	if (res_val_R2 < MIN_RESISTOR_VALUE || res_val_R2 > MAX_RESISTOR_VALUE )
-		return ERROR_INVALID_DATA;
-	
-	if (freq < MIN_FREQUENCY_VALUE || freq > MAX_FREQUENCY_VALUE )
-		return ERROR_INVALID_DATA;
-	
-	if (q < MIN_QUALITY_FACTOR_VALUE || q > MAX_QUALITY_FACTOR_VALUE )
-		return ERROR_INVALID_DATA;
-	/*****************************/
 
 	/*Valor del capacitor C2*/
 	*cap_val_C2 = 1 / ((2 * M_PI * freq) * (q * res_val_R2));
