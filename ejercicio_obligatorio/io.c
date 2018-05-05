@@ -3,14 +3,13 @@
 	Ejercicio Obligatorio
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
-	Archivo: io.c
+	Archivo: components.c
 	Descripción: Programa modularizado para el diseño de un 
 	ecualizador gráfico. 
 	****************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "main.h"
 #include "components.h"
 /**********************************************************
  Esta función toma como argumentos un mensaje para dar al
@@ -106,7 +105,7 @@ especifica la unidad en la que se debe mostrar el resultado al usuario,
 el multiplicador de la correspondiente unidad a la nueva y el mensaje
 junto al cual se muestra el resultado.
 ****************************************************************/
-status_t print_resistor_value(double val, const char * msg)
+status_t print_resistor_value(const char * msg, double val)
 {
 	if (msg == NULL)
 		return ERROR_NULL_POINTER;
@@ -115,7 +114,7 @@ status_t print_resistor_value(double val, const char * msg)
 	return OK;
 }
 
-status_t print_capacitor_value(double val, const char * msg)
+status_t print_capacitor_value(const char * msg, double val)
 {
 	if (msg == NULL)
 		return ERROR_NULL_POINTER;
@@ -123,7 +122,7 @@ status_t print_capacitor_value(double val, const char * msg)
 	printf("%s %.2f %s \n", msg, val/MULTIPLIER_CAPACITANCE, UNIT_CAPACITANCE);
 	return OK;
 }
-status_t print_frequency_value(double val, const char * msg)
+status_t print_frequency_value(const char * msg, double val)
 {
 	if (msg == NULL)
 		return ERROR_NULL_POINTER;
@@ -132,11 +131,11 @@ status_t print_frequency_value(double val, const char * msg)
 	return OK;
 }
 
-status_t print_quality_factor_value(double val, const char * msg)
+status_t print_quality_factor_value(const char * msg, double val)
 {
 	if (msg == NULL)
 		return ERROR_NULL_POINTER;
 
-	printf("%s %.2f %s \n", msg, val/MULTIPLIER_QUALITY_FACTOR, UNIT_QUALITY_FACTOR);
+	printf("%s %.2f %s \n", msg, val, UNIT_QUALITY_FACTOR);
 	return OK;
 }

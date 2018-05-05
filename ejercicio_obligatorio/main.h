@@ -7,6 +7,8 @@
 	Descripción: Programa modularizado para el diseño de un 
 	ecualizador gráfico. 
 	****************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
 
 #define UNIT_RESISTANCE "[kOhm]"
 #define UNIT_CAPACITANCE "[nF]"
@@ -26,12 +28,12 @@ typedef  enum{
 /***PROTOTIPOS**********/
 status_t read_resistor_value(const char * msg, double * val);
 status_t read_frequency_value(const char * msg, double * val);
-status_t read_quality_factor_value(const char * msg, double * val);
-status_t calculate_capacitor_C1_value(const double res_val_R1, const double res_val_R2, const double freq, const double q, double * cap_val_C1);
-status_t calculate_capacitor_C2_value(const double res_val_R1, const double res_val_R2, const double freq, const double q, double * cap_val_C2);
-status_t print_resistor_value(double val, const char * msg);
-status_t print_capacitor_value(double val, const char * msg);
-status_t print_frequency_value(double val, const char * msg);
+status_t read_quality_factor(const char * msg, double * val);
+status_t calculate_capacitor_C1(double res_val_R1, double res_val_R2, double freq, double q, double * cap_val_C1);
+status_t calculate_capacitor_C2(double res_val_R1, double res_val_R2, double freq, double q, double * cap_val_C2);
+status_t print_resistor_value(const char * msg, double val);
+status_t print_capacitor_value(const char * msg, double val);
+status_t print_frequency_value(const char * msgdouble val);
 status_t print_quality_factor_value(double val, const char * msg);
 status_t print_error_message(status_t err);
 /***********************/

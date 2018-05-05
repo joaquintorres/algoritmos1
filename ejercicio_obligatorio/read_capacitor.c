@@ -3,7 +3,7 @@
 	Ejercicio Obligatorio
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
-	Archivo: read_capacitor_value.c
+	Archivo: capacitor.c
 	Descripción: Función de lectura del valor de un capacitor, ingresado 
 	por el usuario. 
 	****************************************************************/
@@ -19,8 +19,7 @@
 typedef  enum{
 	OK,
 	ERROR_NULL_POINTER,
-	ERROR_INVALID_INPUT,
-	ERROR_INPUT_BUFFER
+	ERROR_INVALID_INPUT
 	} status_t;
 
 /*************PROTOTIPO*****************/
@@ -38,7 +37,7 @@ status_t read_capacitor_value (const char * msg, float * val)
 {
 	float user_input;
 	int result;
-	char ch;
+	int c;
 	
 	if (msg == NULL || val == NULL)
 		return ERROR_NULL_POINTER;	
@@ -48,9 +47,9 @@ status_t read_capacitor_value (const char * msg, float * val)
 	if (!result || result == EOF)
 		return ERROR_INVALID_INPUT;	
 	/*Limpieza del buffer*/
-	while ( (ch = getchar()) != '\n' && ch != EOF);
-	if (ch == EOF)
-		return ERROR_INPUT_BUFFER;
+	while ( (c = getchar()) != '\n' && c != EOF);
+	if (c == EOF)
+		return ERROR_INVALID_INPUT;
 	
 	*val = user_input;
 	*val *= MULTIPLIER_CAPACITANCE;

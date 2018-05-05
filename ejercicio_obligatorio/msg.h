@@ -3,26 +3,29 @@
 	Ejercicio Obligatorio
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
-	Archivo: msg.h
+	Archivo: messages.h
 	Descripción: Programa modularizado para el diseño de un 
 	ecualizador gráfico. 
 	****************************************************************/
-#define MSG_R1_IN "Ingrese el valor del resistor R1: "
-#define MSG_R1_OUT "Valor del resistor R1: "
+#include <stdio.h>
+#include <stdlib.h>
 
-#define MSG_R2_IN "Ingrese el valor del resistor R2: "
-#define MSG_R2_OUT "Valor del resistor R2: "
+#define USR_MSG_INPUT_RESISTOR_R1 "Ingrese el valor del resistor R1: "
+#define USR_MSG_OUTPUT_RESISTOR_R1 "Valor del resistor R1: "
 
-#define MSG_FREQ_IN "Ingrese el valor de la frecuencia central: "
-#define MSG_FREQ_OUT "Valor de la frecuencia: "
+#define USR_MSG_INPUT_RESISTOR_R2 "Ingrese el valor del resistor R2: "
+#define USR_MSG_OUTPUT_RESISTOR_R2 "Valor del resistor R2: "
 
-#define MSG_QUALITY_FACTOR_IN "Ingrese el valor del factor de calidad: "
-#define MSG_QUALITY_FACTOR_OUT "Valor del factor de calidad: "
+#define USR_MSG_INPUT_FREQUENCY "Ingrese el valor de la frecuencia central: "
+#define USR_MSG_OUTPUT_FREQUENCY "Valor de la frecuencia: "
 
-#define MSG_C1_OUT "Valor del capacitor C1: "
-#define MSG_C2_OUT "Valor del capacitor C2: "
+#define USR_MSG_INPUT_QUALITY_FACTOR "Ingrese el valor del factor de calidad: "
+#define USR_MSG_OUTPUT_QUALITY_FACTOR "Valor del factor de calidad: "
 
-#define MSG_ERR_NULL_PTR "ERROR: Puntero nulo."
-#define MSG_ERR_INVALID_DATA "ERROR: Dato de entrada inválido."
-#define MSG_ERR_INVALID_RESULT  "ERROR: Resultado inválido."
-#define MSG_ERR_UNKNOWN "ERROR: Error desconocido."
+#define USR_MSG_OUTPUT_CAPACITOR_C1 "Valor del capacitor C1: "
+#define USR_MSG_OUTPUT_CAPACITOR_C2 "Valor del capacitor C2: "
+
+#define MSG_ERR_NULL_PTR "Puntero nulo."
+#define MSG_ERR_INVALID_DATA "Dato de entrada inválido."
+#define MSG_ERR_INVALID_RESULT  "Resultado inválido."
+#define MSG_ERR_UNKNOWN "Error desconocido."
