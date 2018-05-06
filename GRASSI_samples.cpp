@@ -28,14 +28,15 @@ Matrix& load_samples(ifstream& input_file, size_t n)
 	catch (exception& e)
 	{
 		for (Vector* row : A) {
-			delete row;
-			for (Complex* Column : A) {
-				delete Complex;
+			for (Complex* column : A) {
+				delete column;
 			}
+			delete row;
 		}
 		throw e;
 	}
 }
+
 int main() {
 	return 0;
 }

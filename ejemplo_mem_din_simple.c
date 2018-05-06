@@ -39,7 +39,7 @@ double * load_values(size_t * l)
 		{
 			/*Validación de realloc, que devuelve null cuando falla.*/
 			/*malloc 2*/
-			if ((aux = (*double)realloc(v,(alloc_size + CHOP_SIZE)*sizeof(double))) == NULL)
+			if ((aux = (double *)realloc(v,(alloc_size + CHOP_SIZE)*sizeof(double))) == NULL)
 			{
 				/*libero memoria*/
 				free(v);
@@ -52,14 +52,14 @@ double * load_values(size_t * l)
 			alloc_size += CHOP_SIZE;
 		}
 		/*Carga de datos*/
-		v[*l] = strtod(str, &temp);
+		v[(*l)++] = strtod(str, &temp);
 		if (*temp && *temp != '\n')
 		{
 			free(v);
 			*l = 0;
 			return NULL;
 		}
-		*l++;
+		
 	}
 	return 0;
 }
