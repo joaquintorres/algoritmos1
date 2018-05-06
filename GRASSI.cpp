@@ -31,8 +31,8 @@ int main(int argc, char * argv[])
 		row = new vector <Complex *>;
 		for (auto column : v) {
 			column = new Complex;
-			column.re = rand() / 100;
-			column.im = rand() / 100;
+			column->re = rand() / 100;
+			column->im = rand() / 100;
 		}
 	}
 
