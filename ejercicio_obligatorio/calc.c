@@ -12,6 +12,7 @@
 #include <math.h>
 #include "components.h"
 #define M_PI		3.14159265358979323846
+
 /*************************************************************
 Toma los valores de dos resistores (R1<R2) y calcula las capacitancias 
 necesarias para el circuito del ecualizador. Las direcciones 

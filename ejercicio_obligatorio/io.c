@@ -16,7 +16,8 @@
  usuario y la dirección de una variable sobre la que se escribe
  un valor de resistencia ingresado por el usuario.Las unidades
  de entrada son definidas externamente y las unidades de salida
- son siempre en Ohms. 
+ son siempre en Ohms. El valor maximo esta dado por
+ MAX_RESISTOR_VALUE y el minimo por MIN_RESISTOR_VALUE.
 ***********************************************************/
 status_t read_resistor_value(const char * msg, double * val)
 {
@@ -46,7 +47,8 @@ status_t read_resistor_value(const char * msg, double * val)
 }
 /**Se repite la misma función para la frecuencia y el factor de calidad en
 lugar de utilizar funciones diferenciadas, en el caso de que se quiera
-modificar el comportamiento con respecto a estas variables**/
+modificar el comportamiento con respecto a estas variables. El valor minimo
+de la frecuencia esta dado por MIN_FREQUENCY_VALUE y el maximo por MAX_FREQUENCY_VALUE**/
 status_t read_frequency_value(const char * msg, double * val)
 {
 	char str[MAX_STR + 2];
@@ -131,7 +133,7 @@ status_t print_frequency_value(const char * msg, double val)
 	return OK;
 }
 
-status_t print_quality_factor_value(const char * msg, double val)
+status_t print_quality_factor(const char * msg, double val)
 {
 	if (msg == NULL)
 		return ERROR_NULL_POINTER;

@@ -49,7 +49,7 @@ int main (void)
 		return st;
 	}
 	
-	if ((st = read_quality_factor_value(USR_MSG_INPUT_QUALITY_FACTOR, &quality_factor)) != OK)
+	if ((st = read_quality_factor(USR_MSG_INPUT_QUALITY_FACTOR, &quality_factor)) != OK)
 	{
 		print_error_message(st);
 		return st;
@@ -85,7 +85,7 @@ int main (void)
 		return st;
 	}
 	
-	if ((st = print_quality_factor_value(USR_MSG_OUTPUT_QUALITY_FACTOR, quality_factor)) != OK)
+	if ((st = print_quality_factor(USR_MSG_OUTPUT_QUALITY_FACTOR, quality_factor)) != OK)
 	{
 		print_error_message(st);
 		return st;

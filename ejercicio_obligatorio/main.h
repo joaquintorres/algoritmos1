@@ -34,7 +34,7 @@ status_t calculate_capacitor_C2(double res_val_R1, double res_val_R2, double fre
 status_t print_resistor_value(const char * msg, double val);
 status_t print_capacitor_value(const char * msg, double val);
 status_t print_frequency_value(const char * msgdouble val);
-status_t print_quality_factor_value(double val, const char * msg);
+status_t print_quality_factor(double val, const char * msg);
 status_t print_error_message(status_t err);
 /***********************/
 
