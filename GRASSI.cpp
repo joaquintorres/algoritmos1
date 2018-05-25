@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <new>
 #include <exception>
 #include <cstdlib>
@@ -16,16 +17,16 @@ struct Complex {
 
 int main(int argc, char * argv[])
 {
-	if (argc != 5)
-		throw exception::logic_error::invalid_argument e;
-	if (string(argv[2]) != "-n" || string(argv[4]) != "-o")
-		throw exception::logic_error_invalid_argument e;
 
-	ofstream ofs;
-	ofs.open(argv[5]);
+	if (argc != 5)
+		return 1;
+	if (string(argv[2]) != "-n" || string(argv[4]) != "-o")
+		return 1;
+
+	ofstream ofs(argv[5]);
 	
 	srand(time(nullptr));
-	size_t n = argv[3];
+	size_t n = (size_t) strtod(argv[3], NULL);
 	vector <vector<Complex*>*> v(n);
 	for (auto row : v) {
 		row = new vector <Complex *>;
@@ -46,6 +47,6 @@ int main(int argc, char * argv[])
 		for (auto y : row) {
 			delete y;
 		}
-		delete x
+		delete x;
 	}
 } 
