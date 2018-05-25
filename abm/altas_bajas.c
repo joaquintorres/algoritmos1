@@ -36,6 +36,12 @@ typedef enum{
 	FALSE
 } bool_t;
 
+typedef struct {
+	size_t id;
+	char * barcode;
+	char * description;
+} item_t;
+
 /*Valida los argumentos pasados por línea de órdenes y devuelve por puntero las variables validadas.*/
 status_t validate_arguments(int argc, char * argv[], char ** inventory_file_path, char ** appended_file_path)
 {
@@ -136,6 +142,7 @@ char ** split(const char * s, char del, size_t * l)
 	{
 		*l = 0;
 		return NULL;
+
 	}
 	for (i = 0; line [i]; i++)
 	{
@@ -150,16 +157,18 @@ char ** split(const char * s, char del, size_t * l)
 		free(fields);
 		return NULL;
 	}
-	for (q = line,i = 0; (p = strtok(line, del_array)) != NULL; q = NULL,i++)
+	for (q = line, i = 0; (p = strtok(q, del_array)) != NULL;q =NULL, i++)
 	{
-			if (strdupl(p, &fields[i]))
+			if (strdupl(p, &(fields[i])))
 			{
 				free(line);
 				destroy_string_array(&fields,i);
 				*l = 0;
 				return NULL;
 			}
+			fprintf(stderr, "%s\n", "strdupl hecho.");
 	}
+
 	free(line); /*Se libera la copia.*/
 	return fields;
 }
@@ -202,8 +211,11 @@ int main(int argc, char *argv[])
 			return st;
 		string_array = split(line,LINE_DELIMITER,&string_array_length);
 		for (i = 0; i < string_array_length; ++i)
-			fprintf(crud_file_ptr, "%s\n", string_array[i]);
+		{
+			
+		}
 		free(line);
+		destroy_string_array(&string_array,string_array_length);
 	}
 	/*ABM*/
 
