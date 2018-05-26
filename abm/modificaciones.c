@@ -3,12 +3,11 @@
 	Caso de Estudio N.° 2: Altas, bajas y modificaciones
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
-	Archivo: altas.c
-	Descripción: Programa que agrega líneas sobre un archivo CSV a
+	Archivo: modificaciones.c
+	Descripción: Programa que realiza modificaciones sobre un archivo CSV a
 	partir de otro. Los archivos deben tener tres campos diferenciados para el ID, 
 	el código de barras y la descripción de un producto.
 	****************************************************************/
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -256,15 +255,16 @@ status_t write_item_array_to_file(FILE * target_file_ptr, item_t * item_array, s
 	}
 	return OK;
 }
-/*Realiza las altas de un arreglo a otro, depositando el resultado en */
-status_t add_to_item_array(item_t * modified_arr,size_t modified_arr_size,item_t * modifying_arr,size_t modifying_arr_size, item_t ** merged_arr)
+/*Realiza las modificaciones correspondientes del arreglo a modificarse, usando un arreglo con las modificaciones 
+y se deposita por puntero en un tercer arreglo.*/
+status_t update_item_array(item_t * modified_arr,size_t modified_arr_size,item_t * modifying_arr,size_t modifying_arr_size, item_t ** merged_arr)
 {
 	size_t i;
 	size_t j;
 
 	if (modified_arr == NULL || modifying_arr == NULL || merged_arr == NULL)
 		return ERROR_NULL_POINTER;
-	if ((*merged_arr = (item_t *) malloc((modified_arr_size + modifying_arr_size)*sizeof(item_t))) == NULL)
+	if ((*merged_arr = (item_t *) malloc(modified_arr_size*sizeof(item_t))) == NULL)
 	{
 		free(*merged_arr);
 		*merged_arr = NULL;
@@ -275,20 +275,20 @@ status_t add_to_item_array(item_t * modified_arr,size_t modified_arr_size,item_t
 		for (j = 0; j < modifying_arr_size; ++j)
 		{
 			if (modified_arr[i].id == modifying_arr[j].id)
-				return ERROR_INPUT_FILE; /*Si se trata de agregar un número de ID igual a alguno existente hay un error.*/
+			{
+				(*merged_arr)[i].id = modifying_arr[j].id;
+				(*merged_arr)[i].barcode = modifying_arr[j].barcode;
+				(*merged_arr)[i].description = modifying_arr[j].description;
+			}
 		}
-	}
-	for (i = 0; i < modified_arr_size; ++i)
-	{
-		(*merged_arr)[i].id = modified_arr[i].id;
-		(*merged_arr)[i].barcode = modified_arr[i].barcode;
-		(*merged_arr)[i].description = modified_arr[i].description;
-	}
-	for (j = 0; j < modifying_arr_size; ++j)
-	{
-		(*merged_arr)[i+j+1].id = modifying_arr[j].id;
-		(*merged_arr)[i+j+1].barcode = modifying_arr[j].barcode;
-		(*merged_arr)[i+j+1].description = modifying_arr[j].description;
+		if ((*merged_arr)[i].id == modifying_arr[j].id)
+			continue;
+		else
+		{
+			(*merged_arr)[i].id = modified_arr[i].id;
+			(*merged_arr)[i].barcode = modified_arr[i].barcode;
+			(*merged_arr)[i].description = modified_arr[i].description;
+		} /*si no hay modificaciones disponibles el arreglo queda igual al original.*/
 	}
 	return OK;
 }
@@ -334,9 +334,9 @@ int main(int argc, char *argv[])
 		return st;
 	
 	/*ABM*/
-	crud_item_array_size = inventory_item_array_size + appended_item_array_size;
+	crud_item_array_size = inventory_item_array_size;
 
-	if ((st = add_to_item_array(inventory_item_array,inventory_item_array_size,appended_item_array,appended_item_array_size, &crud_item_array))!=OK)
+	if ((st = update_item_array(inventory_item_array,inventory_item_array_size,appended_item_array,appended_item_array_size, &crud_item_array))!=OK)
 		return OK;	
 
 	/*ESCRITURA*/
