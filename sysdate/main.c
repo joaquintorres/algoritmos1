@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
+#include "types.h"
 /*MENSAJES DE ERROR*/
 #define ERR_MSG_NULL_POINTER "Ha ocurrido un error por pasaje de puntero nulo."
 #define ERR_MSG_NUMBER_OF_ARGS "Cantidad de argumentos inválida."
@@ -25,13 +25,6 @@
 #define FMT_YR_MO_DAY_HR_MIN_SEC "AAAAMMDDHHmmSS" /*El día del mes.*/
 #define FMT_YR_DAY_HR_MIN_SEC "AAAADDDHHmmSS" /*El día del año.*/
 /************/
-typedef enum {
-	OK,
-	ERROR_NULL_POINTER,
-	ERROR_INVALID_NUMBER_OF_ARGS,
-	ERROR_INVALID_ARG,
-	ERROR_INVALID_FLAG
-} status_t;
 
 /*PROTOTIPOS*/
 status_t validate_arguments(size_t argc, char * argv[], char ** format);
