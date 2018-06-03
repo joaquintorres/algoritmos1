@@ -60,6 +60,7 @@ typedef struct {
 	char * barcode;
 	char * description;
 } item_t;
+
 /*Valida los argumentos pasados por línea de órdenes y devuelve por puntero las variables validadas.*/
 status_t validate_arguments(int argc, char * argv[], char ** inventory_file_path, char ** appended_file_path)
 {
@@ -83,19 +84,20 @@ status_t validate_arguments(int argc, char * argv[], char ** inventory_file_path
 /*Lee líneas de un archivo, separando una línea con algún delimitador pasado como argumento.
 La línea se devuelve por puntero como una cadena de caracteres. Además, se devuelve un booleano
 por puntero indicando si se llegó al EOF o no (con TRUE y FALSE respectivamente).*/
-status_t read_line_from_file(FILE * source_file,const char del,char ** s, bool_t * eof)
+status_t read_line_from_file(FILE * file, char del, char ** s, bool_t * eof)
 {
 	size_t used_size;
 	size_t alloc_size;
-	char c;
+	int c;
 	char * aux;
+
 	if (s == NULL || eof == NULL)
 		return ERROR_NULL_POINTER;
 	if ((*s = (char *) malloc(INIT_CHOP*sizeof(char))) == NULL)
 		return ERROR_MEMORY;
 	alloc_size = INIT_CHOP;
 	used_size = 0;
-	while ((c = fgetc(source_file))!= del && c != EOF)
+	while ((c = fgetc(file))!= del && c != EOF)
 	{
 		if (used_size == alloc_size - 1)
 		{
@@ -116,25 +118,28 @@ status_t read_line_from_file(FILE * source_file,const char del,char ** s, bool_t
 /*Recibe una cadena de caracteres y devuelve por puntero la misma cadena copiada.*/
 status_t strdupl(const char * s, char ** t)
 {
+	size_t i;
+
 	if (s == NULL || t == NULL)
 		return ERROR_NULL_POINTER;
 	if ((*t = (char *) malloc((strlen(s)+1)*sizeof(char))) == NULL)
 		return ERROR_MEMORY;
-	strcpy(*t,s);
+	for (i = 0;(*t)[i] = s[i];i++);
 	return OK;
 }
 /*Destruye un arreglo de cadenas de caracteres.*/
 status_t destroy_string_array(char *** p, size_t l)
 {
 	size_t i;
+
 	if (p == NULL)
 		return ERROR_NULL_POINTER;
 	for (i = 0; i < l; i++)
 	{
 		free((*p)[i]);
 		(*p)[i] = NULL;
-	}/*Borra las cadenas*/
-	free(*p); /*Borra el arreglo.*/
+	}/*Libera las cadenas*/
+	free(*p); /*Libera el arreglo.*/
 	*p = NULL;
 	return OK;
 }
