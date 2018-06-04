@@ -23,7 +23,32 @@ status_t sysdate(char * format)
 		return OK;
 	}
 
+	if (!strcmp(format,FMT_YR_DAY))
+	{
+		if ((st = print_as_year_day(calendar_time)) != OK)
+			return st;
+		return OK;
+	}
 	
+	if (!strcmp(format,FMT_YR_MO_DAY))
+	{
+		if ((st = print_as_year_month_day(calendar_time)) != OK)
+			return st;
+		return OK;
+	}
 
+	if (!strcmp(format,FMT_YR_MO_DAY_HR_MIN_SEC))
+	{
+		if ((st = print_as_year_month_day_hours_minutes_seconds(calendar_time)) != OK)
+			return st;
+		return OK;
+	}
+
+	if (!strcmp(format,FMT_YR_DAY_HR_MIN_SEC))
+	{
+		if ((st = print_as_yearday_hours_minutes_seconds(calendar_time)) != OK)
+			return st;
+		return OK;
+	}
 	return OK;
 }

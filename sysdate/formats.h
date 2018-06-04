@@ -8,6 +8,10 @@
 #define FMT_YR_DAY_HR_MIN_SEC "AAAADDDHHmmSS" /*El día del año.*/
 
 status_t print_as_day_month_year(struct tm * time);
-status_t sysdate(char * format);
+status_t print_as_year_day(struct tm * time);
+status_t print_as_year_month_day(struct tm * time);
+status_t print_as_year_month_day_hours_minutes_seconds(struct tm * time);
+status_t print_as_yearday_hours_minutes_seconds(struct tm * time);
+
 
 #endif
