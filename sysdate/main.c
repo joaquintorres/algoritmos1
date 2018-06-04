@@ -3,6 +3,7 @@
 #include <time.h>
 #include "types.h"
 #include "formats.h"
+#include "sysdate.h"
 
 /*MENSAJES DE ERROR*/
 #define ERR_MSG_NULL_POINTER "Ha ocurrido un error por pasaje de puntero nulo."
