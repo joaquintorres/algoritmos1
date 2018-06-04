@@ -12,5 +12,10 @@ typedef enum {
 	ERROR_CLOCK /*Revisar significatividad*/
 } status_t;
 
+typedef struct 
+{
+	char ** messages;
+	size_t size;
+}error_dictionary_t;
 
 #endif

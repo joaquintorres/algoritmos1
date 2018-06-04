@@ -2,6 +2,8 @@
 #include <string.h>
 #include <time.h>
 #include "types.h"
+#include "formats.h"
+
 /*MENSAJES DE ERROR*/
 #define ERR_MSG_NULL_POINTER "Ha ocurrido un error por pasaje de puntero nulo."
 #define ERR_MSG_NUMBER_OF_ARGS "Cantidad de argumentos inválida."
@@ -19,11 +21,6 @@
 #define CMD_ARG_FORMAT_TOKEN_VALUE 2
 #define CMD_ARG_FORMAT_FLAG "-fmt"
 
-#define FMT_DAY_MO_YR "DDMMAAAA" 
-#define FMT_YR_DAY "AAAADDD" /*Día (sobre los 365) del año.*/
-#define FMT_YR_MO_DAY "AAAAMMDD"
-#define FMT_YR_MO_DAY_HR_MIN_SEC "AAAAMMDDHHmmSS" /*El día del mes.*/
-#define FMT_YR_DAY_HR_MIN_SEC "AAAADDDHHmmSS" /*El día del año.*/
 /************/
 
 /*PROTOTIPOS*/
@@ -38,6 +35,8 @@ int main(int argc, char * argv[])
 	if ((st = validate_arguments(argc,argv,&format)) != OK)
 		return st;
 	printf("%s\n", format);
+	if ((st = sysdate(format)) != OK)
+		return st;
 	return OK;
 }
 
