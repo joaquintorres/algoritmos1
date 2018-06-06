@@ -45,7 +45,7 @@ status_t process_addition_records(FILE * old_file,FILE * mod_file, FILE * new_fi
 	{
 		if ((st = split(line,&mod_file_record,field_del)) != OK)
 			return st;
-		while ((st = read_line_from_file(old_file, line_del, &aux_line, &aux_eof)) == OK && eof == FALSE)
+		while ((st = read_line_from_file(old_file, line_del, &aux_line, &aux_eof)) == OK && aux_eof == FALSE)
 		{
 			if ((st = split(aux_line,&old_file_record,field_del)) != OK)
 				return st;
