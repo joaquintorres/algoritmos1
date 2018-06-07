@@ -1,3 +1,12 @@
+/*  ***************************************************************
+	Algoritmos y Progrmación I - 95.11 - Curso Ing. Martín Cardozo
+	Trabajo Práctico N.° 1: Fecha y hora del sistema
+	Alumno: Joaquín Torres
+	Correo Electrónico: joaquintorres1997@gmail.com
+	Archivo: types.h
+	Descripción: Programa que recibe un formato por argumentos de línea
+	de órdenes y devuelve la fecha actual en ese formato.
+	****************************************************************/
 #ifndef TYPES__H
 #define TYPES__H
 
@@ -12,10 +21,11 @@ typedef enum {
 	ERROR_CLOCK /*Revisar significatividad*/
 } status_t;
 
-typedef struct 
-{
-	char ** messages;
-	size_t size;
-}error_dictionary_t;
+typedef enum {
+	SERIOUSNESS_TRIVIAL,
+	SERIOUSNESS_WARNING,
+	SERIOUSNESS_ERROR,
+	SERIOUSNESS_FATAL_ERROR
+} error_seriousness_t;
 
 #endif

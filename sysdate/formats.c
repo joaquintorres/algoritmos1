@@ -1,3 +1,12 @@
+/*  ***************************************************************
+	Algoritmos y Progrmación I - 95.11 - Curso Ing. Martín Cardozo
+	Trabajo Práctico N.° 1: Fecha y hora del sistema
+	Alumno: Joaquín Torres
+	Correo Electrónico: joaquintorres1997@gmail.com
+	Archivo: formats.c
+	Descripción: Programa que recibe un formato por argumentos de línea
+	de órdenes y devuelve la fecha actual en ese formato.
+	****************************************************************/
 #include <stdio.h>
 #include <time.h>
 #include "types.h"

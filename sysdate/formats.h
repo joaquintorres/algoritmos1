@@ -1,5 +1,18 @@
+/*  ***************************************************************
+	Algoritmos y Progrmación I - 95.11 - Curso Ing. Martín Cardozo
+	Trabajo Práctico N.° 1: Fecha y hora del sistema
+	Alumno: Joaquín Torres
+	Correo Electrónico: joaquintorres1997@gmail.com
+	Archivo: formats.h
+	Descripción: Programa que recibe un formato por argumentos de línea
+	de órdenes y devuelve la fecha actual en ese formato.
+	****************************************************************/
+
 #ifndef FORMATS__H
 #define FORMATS__H
+
+#include <stdio.h>
+#include <time.h>
 
 #define FMT_DAY_MO_YR "DDMMAAAA" 
 #define FMT_YR_DAY "AAAADDD" /*Día (sobre los 365) del año.*/
