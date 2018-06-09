@@ -63,52 +63,123 @@ status_t strdupl(const char * s, char ** t)
 /*Recibe una línea separada en campos por un delimitador pasado como argumento.
 Devuelve por puntero un arreglo de cadenas que contiene en cada elemento uno de los campos originales
 y una variable que contiene la cantidad de campos.*/
-status_t split(const char * s,record_t * record ,char del)
+status_t split(const char * s,char *** fields, char del, size_t * l) 
 {
-	char * line; /*Se toma la cadena por copia.*/
-	char * p ; /*Variable auxiliar*/
-	char * aux ;		/*Variable auxiliar*/
-	char * temp; /*Variable auxiliar*/
+	char * line = NULL; /*Se toma la cadena por copia.*/
+	char * q = NULL ; /*Variable auxiliar*/
+	char * p = NULL; /*Variable auxiliar*/
+	size_t i;
 	char del_array[2]; /*strtok() toma una cadena de caracteres, no un char.*/
 
 	del_array[0] = del;
 	del_array[1] = '\0';
 
-	if (s == NULL)
+	if (fields == NULL || s == NULL || l == NULL)
 		return ERROR_NULL_POINTER;
 	if (strdupl(s, &line))
+	{
+		*l = 0;
 		return ERROR_MEMORY;
 
-	p = strtok(line, del_array);
-	if (strdupl(p, &aux))
+	}
+	for (i = 0; line [i]; i++)
 	{
+		if (line[i] == del)
+			(*l)++;	
+	} /*Se cuenta la cantidad de delimitadores.*/
+	(*l)++; /*La cantidad de campos es la cantidad de delimitadores más uno.*/
+	if (((*fields) = (char **) malloc ((*l)*sizeof(char *)) ) == NULL)
+	{
+		fprintf(stderr, "%s\n", "malloc del split");
 		free(line);
+		*l = 0;
+		free(*fields);
 		return ERROR_MEMORY;
 	}
-	record -> id = strtoul(aux,&temp,10);
-	if (*temp && *temp != '\n')
-		return ERROR_INPUT_FILE;
-	
-	p = strtok(NULL, del_array);
-	if (strdupl(p, &(record -> barcode)))
+	for (q = line, i = 0; (p = strtok(q, del_array)) != NULL;q =NULL, i++)
 	{
-		free(line);
-		return ERROR_MEMORY;
-	}	
-
-	p = strtok(NULL, del_array);
-	if (strdupl(p, &(record -> description)))
-	{
-		free(line);
-		return ERROR_MEMORY;
+			if (strdupl(p, &((*fields)[i])))
+			{
+				free(line);
+				destroy_string_array(fields,i);
+				*l = 0;
+				return ERROR_MEMORY;
+			}
 	}
 
 	free(line); /*Se libera la copia.*/
 	return OK;
 }
+/*Destruye un arreglo de cadenas de caracteres.*/
+status_t destroy_string_array(char *** p, size_t l)
+{
+	size_t i;
+
+	if (p == NULL)
+		return ERROR_NULL_POINTER;
+	for (i = 0; i < l; i++)
+	{
+		free((*p)[i]);
+		(*p)[i] = NULL;
+	}/*Libera las cadenas*/
+	free(*p); /*Libera el arreglo.*/
+	*p = NULL;
+	return OK;
+}
+
+/*Pasa un arreglo de cadenas a una estructura record_t, destruye la estructura*/
+status_t make_record_from_string_array(record_t * record, char *** string_array, size_t size)
+{
+	char * temp;
+	char * aux;
+
+	if (record == NULL || string_array == NULL)
+		return ERROR_NULL_POINTER;
+	
+	if (strdupl((*string_array)[FIELD_POSITION_FOR_ID], &aux))
+		return ERROR_MEMORY;
+
+	record -> id = strtoul(aux, &temp, 10);
+	if (*temp && *temp != '\n')
+		return ERROR_INVALID_KEY;
+	if(strdupl((*string_array)[FIELD_POSITION_FOR_BARCODE],&(record -> barcode)))
+		return ERROR_MEMORY;
+
+	if(strdupl((*string_array)[FIELD_POSITION_FOR_DESCRIPTION],&(record -> description)))
+		return ERROR_MEMORY;
+	destroy_string_array(string_array,size);
+	return OK;
+}
+
+status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_del, char line_del, bool_t * eof)
+{
+	char * line;
+	char ** aux_str_array;
+	size_t l;
+	status_t st;
+	bool_t aux_eof;
+	*eof = FALSE;
+
+
+	if (record == NULL || file == NULL)
+		return ERROR_NULL_POINTER;
+
+	if ((st = read_line_from_file(file, line_del, &line, &aux_eof)) != OK)
+		return st;
+	
+	if ((st = split(line, &aux_str_array,field_del, &l)) != OK)
+		return st;
+
+	if((st = make_record_from_string_array(record,&aux_str_array,l))!= OK)
+		return st;
+	free(line);
+	if(aux_eof == TRUE)
+		*eof = TRUE;	
+	return OK;
+}
 
 /*Escribe sobre un archivo una estrucura record_t, en formato CSV*/
-status_t export_record_to_CSV_file(FILE * target_file,record_t record,char field_del, char line_del)
+status_t export_record_to_CSV_file(record_t record,FILE * target_file,char field_del)
 {
 	if (target_file == NULL)
 		return ERROR_NULL_POINTER;
@@ -116,7 +187,7 @@ status_t export_record_to_CSV_file(FILE * target_file,record_t record,char field
 	fprintf(target_file, "%d%c", record.id, field_del);
 	fprintf(target_file, "%s%c", record.barcode, field_del);
 	fprintf(target_file, "%s", record.description);
-	fputc(line_del, target_file);
+	fputc('\n', target_file);
 
 	return OK;
 }

@@ -3,7 +3,7 @@
 	Caso de Estudio N.° 2: Altas, bajas y modificaciones
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
-	Archivo: main.c (para altas)
+	Archivo: main.c (para modficaciones)
 	Descripción: Programa que agrega líneas sobre un archivo CSV a
 	partir de otro. Los archivos deben tener tres campos diferenciados para el ID, 
 	el código de barras y la descripción de un producto.
@@ -13,7 +13,7 @@
 #include <string.h>
 #include "types.h"
 #include "utils.h"
-#include "process_addition_records.h"
+#include "process_update_records.h"
 
 #define MIN_ARGUMENTS 5
 #define MAX_ARGUMENTS 5
@@ -31,7 +31,7 @@
 #define FIELD_DELIMITER ','
 
 /*Valida los argumentos pasados por línea de órdenes y devuelve por puntero las variables validadas.*/
-status_t validate_arguments(int argc, char * argv[], char ** inventory_file_path, char ** additions_file_path)
+status_t validate_arguments(int argc, char * argv[], char * inventory_file_path[], char * additions_file_path[])
 {
 	if (additions_file_path == NULL || inventory_file_path == NULL)
 		return ERROR_NULL_POINTER;
@@ -64,33 +64,50 @@ int main(int argc, char *argv[])
 		return st;
 	/*APERTURA*/
 	if ((file_inventory = fopen(inventory_file_path,"rt")) == NULL)
-		return ERROR_INPUT_FILE;
+		return ERROR_INVENTORY_FILE;
 	if ((file_additions = fopen(additions_file_path,"rt")) == NULL)
 	{
 		fclose(file_inventory);
-		return ERROR_INPUT_FILE;
+		return ERROR_ADDITIONS_FILE;
 	}
 	if ((file_result = fopen(TEMP_FILENAME,"wt")) == NULL)
 	{
 		fclose(file_inventory);
 		fclose(file_additions);
-		return ERROR_INPUT_FILE;
+		return ERROR_OUTPUT_FILE;
 	}
 	result_file_path = TEMP_FILENAME;
 	
 	/*PROCESAMIENTO*/
-
-	if ((st = process_addition_records(file_inventory,file_additions, file_result, LINE_DELIMITER, FIELD_DELIMITER)) != OK)
+	
+	if ((st = process_update_records(file_inventory,file_additions, file_result, FIELD_DELIMITER, LINE_DELIMITER)) != OK)
+	{	
+		fclose(file_inventory);
+		fclose(file_additions);
+		fclose(file_result);
 		return st;
+	}
+	
+	/*char string[100] = "1,dos,tres";
+	char ** str_array;
+	size_t l;
+	if (split(string, &str_array, FIELD_DELIMITER, &l) != OK)
+		return 1;
+	printf("%s\n", str_array[0]);
+	printf("%s\n", str_array[1]);
+	if (make_)
+	*/
 
 	/*CIERRE*/
 	fclose(file_inventory);
 	fclose(file_additions);
 	if ((fclose(file_result)) == EOF)
 		return ERROR_DISK_SPACE;
+	/*
 	if(remove(inventory_file_path))
 		return ERROR_OUTPUT_FILE;
 	if(rename(result_file_path, inventory_file_path))
 		return ERROR_OUTPUT_FILE;
+	*/
 	return OK;
 }
