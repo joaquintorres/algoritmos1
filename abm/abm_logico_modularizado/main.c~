@@ -16,7 +16,8 @@
 #include "utils.h"
 #include "process_additions.h"
 
-
+#define LINE_DELIMITER '|'
+#define FIELD_DELIMITER ','
 
 /*Valida los argumentos pasados por línea de órdenes y devuelve por puntero las variables validadas.*/
 status_t validate_arguments(int argc, char * argv[], char * inventory_file_path[], char * additions_file_path[])

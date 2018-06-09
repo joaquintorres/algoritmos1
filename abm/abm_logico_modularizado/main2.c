@@ -11,24 +11,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "main.h"
 #include "types.h"
 #include "utils.h"
-#include "process_update_records.h"
+#include "process_updates.h"
 
-#define MIN_ARGUMENTS 5
-#define MAX_ARGUMENTS 5
-
-#define CMD_ARG_INVENTORY_FILE_TOKEN_POSITION 1
-#define CMD_ARG_INVENTORY_FILE_TOKEN_VALUE 2
-#define CMD_ARG_INVENTORY_FILE_FLAG "-i"
-
-#define CMD_ARG_ADDITIONS_FILE_TOKEN_POSITION 3
-#define CMD_ARG_ADDITIONS_FILE_TOKEN_VALUE 4
-#define CMD_ARG_ADDITIONS_FILE_FLAG "-a"
-
-#define TEMP_FILENAME "salida.tmp"
-#define LINE_DELIMITER '|'
-#define FIELD_DELIMITER ','
 
 /*Valida los argumentos pasados por línea de órdenes y devuelve por puntero las variables validadas.*/
 status_t validate_arguments(int argc, char * argv[], char * inventory_file_path[], char * additions_file_path[])
@@ -88,26 +75,17 @@ int main(int argc, char *argv[])
 		return st;
 	}
 	
-	/*char string[100] = "1,dos,tres";
-	char ** str_array;
-	size_t l;
-	if (split(string, &str_array, FIELD_DELIMITER, &l) != OK)
-		return 1;
-	printf("%s\n", str_array[0]);
-	printf("%s\n", str_array[1]);
-	if (make_)
-	*/
-
+	
 	/*CIERRE*/
 	fclose(file_inventory);
 	fclose(file_additions);
 	if ((fclose(file_result)) == EOF)
 		return ERROR_DISK_SPACE;
-	/*
+	
 	if(remove(inventory_file_path))
 		return ERROR_OUTPUT_FILE;
 	if(rename(result_file_path, inventory_file_path))
 		return ERROR_OUTPUT_FILE;
-	*/
+	
 	return OK;
 }

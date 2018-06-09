@@ -3,7 +3,7 @@
 	Caso de Estudio N.° 2: Altas, bajas y modificaciones
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
-	Archivo: main.c (para altas)
+	Archivo: main.c (para modficaciones)
 	Descripción: Programa que agrega líneas sobre un archivo CSV a
 	partir de otro. Los archivos deben tener tres campos diferenciados para el ID, 
 	el código de barras y la descripción de un producto.
@@ -14,9 +14,10 @@
 #include "main.h"
 #include "types.h"
 #include "utils.h"
-#include "process_additions.h"
+#include "process_update_records.h"
 
-
+#define LINE_DELIMITER '|'
+#define FIELD_DELIMITER ','
 
 /*Valida los argumentos pasados por línea de órdenes y devuelve por puntero las variables validadas.*/
 status_t validate_arguments(int argc, char * argv[], char * inventory_file_path[], char * additions_file_path[])
@@ -67,15 +68,16 @@ int main(int argc, char *argv[])
 	result_file_path = TEMP_FILENAME;
 	
 	/*PROCESAMIENTO*/
-
-	if ((st = process_addition_records(file_inventory,file_additions, file_result, FIELD_DELIMITER, LINE_DELIMITER)) != OK)
+	
+	if ((st = process_update_records(file_inventory,file_additions, file_result, FIELD_DELIMITER, LINE_DELIMITER)) != OK)
 	{	
 		fclose(file_inventory);
 		fclose(file_additions);
 		fclose(file_result);
 		return st;
 	}
-
+	
+	
 	/*CIERRE*/
 	fclose(file_inventory);
 	fclose(file_additions);

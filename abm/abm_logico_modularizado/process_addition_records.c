@@ -21,7 +21,9 @@ status_t process_addition_records(FILE * inv_file,FILE * mod_file, FILE * new_fi
 	record_t record_inv;
 	record_t record_mod;
 	status_t st;
-	puts("process_addition_records()");
+
+	if (inv_file == NULL || mod_file == NULL || new_file == NULL)
+		return ERROR_NULL_POINTER;
 	/*n1 y n2 indican si se llegó al fin del archivo y st si hubo un error */
 	if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, line_del, &n1)) != OK) 
 		return st;

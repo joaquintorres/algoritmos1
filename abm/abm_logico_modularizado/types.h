@@ -43,8 +43,8 @@ typedef enum{
 
 typedef struct {
 	size_t id;
-	char * barcode; /*Lo dejo como arreglo no estático por coherencia con los argumentos de strdupl, un código de barras puede*/
-	char * description; /*expresarse como un arreglo estático char barcode[13+1]*/
+	char * barcode; /*Falta castear char * en el código para poder usar char[13+1]*/
+	char * description; 
 } record_t;
 
 #endif
