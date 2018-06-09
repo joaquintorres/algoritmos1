@@ -32,31 +32,30 @@ status_t process_update_records(FILE * inv_file,FILE * mod_file, FILE * new_file
 
 	while (n1 == FALSE && n2 == FALSE)
 	{
-		if (record_inv.id == record_mod.id)
-		{
-			if ((st = export_record_to_CSV_file(record_mod,new_file,field_del)) != OK)
-				return st;
-			if ((st = read_record_from_CSV_file(&record_mod,mod_file, field_del, line_del, &n2)) != OK) 
-				return st;
-		}
+
 		if (record_inv.id < record_mod.id)
 		{
 			if ((st = export_record_to_CSV_file(record_inv,new_file,field_del)) != OK)
 				return st;
 			if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, line_del, &n1)) != OK) 
 				return st;
-		}
-		else
-		{
-			if ((st = read_record_from_CSV_file(&record_mod,mod_file, field_del, line_del, &n2)) != OK) 
+		}else
+		{	
+			if (record_inv.id == record_mod.id)
+			{
+				if ((st = export_record_to_CSV_file(record_mod,new_file,field_del)) != OK)
 				return st;
+				if ((st = read_record_from_CSV_file(&record_mod,mod_file, field_del, line_del, &n2)) != OK) 
+				return st;
+				if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, line_del, &n1)) != OK) 
+				return st;
+			}else
+			{
+				return ERROR_NONEXISTENT_RECORD;
+			}
 		}
 	}
-
-	/*Se valida si el archivo de modificaciones no llegó al EOF, i.e. que no exista el
-	registro en el inventario*/
-	if (n2 == FALSE)
-		return ERROR_NONEXISTENT_RECORD;
+		
 
 	/*Se escriben los valores restantes del inventario*/
 	while (n1 == FALSE)

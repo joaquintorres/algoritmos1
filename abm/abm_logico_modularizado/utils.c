@@ -23,7 +23,8 @@ status_t read_line_from_file(FILE * file, char del, char ** s, bool_t * eof)
 	int c;
 	char * aux;
 
-	if (s == NULL || eof == NULL)
+	puts("\t\t read_line_from_file()");
+	if (s == NULL || eof == NULL || file == NULL)
 		return ERROR_NULL_POINTER;
 	if ((*s = (char *) malloc(INIT_CHOP*sizeof(char))) == NULL)
 		return ERROR_MEMORY;
@@ -74,6 +75,7 @@ status_t split(const char * s,char *** fields, char del, size_t * l)
 	del_array[0] = del;
 	del_array[1] = '\0';
 
+	puts("\t\t split()");
 	if (fields == NULL || s == NULL || l == NULL)
 		return ERROR_NULL_POINTER;
 	if (strdupl(s, &line))
@@ -90,7 +92,6 @@ status_t split(const char * s,char *** fields, char del, size_t * l)
 	(*l)++; /*La cantidad de campos es la cantidad de delimitadores más uno.*/
 	if (((*fields) = (char **) malloc ((*l)*sizeof(char *)) ) == NULL)
 	{
-		fprintf(stderr, "%s\n", "malloc del split");
 		free(line);
 		*l = 0;
 		free(*fields);
@@ -98,7 +99,8 @@ status_t split(const char * s,char *** fields, char del, size_t * l)
 	}
 	for (q = line, i = 0; (p = strtok(q, del_array)) != NULL;q =NULL, i++)
 	{
-			if (strdupl(p, &((*fields)[i])))
+		puts("\t\t\t strtok()");
+		if (strdupl(p, &((*fields)[i])))
 			{
 				free(line);
 				destroy_string_array(fields,i);
@@ -115,6 +117,7 @@ status_t destroy_string_array(char *** p, size_t l)
 {
 	size_t i;
 
+	puts("destroy_string_array");
 	if (p == NULL)
 		return ERROR_NULL_POINTER;
 	for (i = 0; i < l; i++)
@@ -128,26 +131,27 @@ status_t destroy_string_array(char *** p, size_t l)
 }
 
 /*Pasa un arreglo de cadenas a una estructura record_t, destruye la estructura*/
-status_t make_record_from_string_array(record_t * record, char *** string_array, size_t size)
+status_t make_record_from_string_array(record_t * record, char ** string_array)
 {
 	char * temp;
 	char * aux;
 
+	puts("\t\t make_record_from_string_array");
 	if (record == NULL || string_array == NULL)
 		return ERROR_NULL_POINTER;
 	
-	if (strdupl((*string_array)[FIELD_POSITION_FOR_ID], &aux))
+	if (strdupl(string_array[FIELD_POSITION_FOR_ID], &aux))
 		return ERROR_MEMORY;
 
 	record -> id = strtoul(aux, &temp, 10);
 	if (*temp && *temp != '\n')
 		return ERROR_INVALID_KEY;
-	if(strdupl((*string_array)[FIELD_POSITION_FOR_BARCODE],&(record -> barcode)))
+	if(strdupl(string_array[FIELD_POSITION_FOR_BARCODE],&(record -> barcode)))
 		return ERROR_MEMORY;
 
-	if(strdupl((*string_array)[FIELD_POSITION_FOR_DESCRIPTION],&(record -> description)))
+	if(strdupl(string_array[FIELD_POSITION_FOR_DESCRIPTION],&(record -> description)))
 		return ERROR_MEMORY;
-	destroy_string_array(string_array,size);
+
 	return OK;
 }
 
@@ -160,7 +164,7 @@ status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_de
 	bool_t aux_eof;
 	*eof = FALSE;
 
-
+	puts("\t read_record_from_CSV_file()");
 	if (record == NULL || file == NULL)
 		return ERROR_NULL_POINTER;
 
@@ -170,11 +174,14 @@ status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_de
 	if ((st = split(line, &aux_str_array,field_del, &l)) != OK)
 		return st;
 
-	if((st = make_record_from_string_array(record,&aux_str_array,l))!= OK)
+	if((st = make_record_from_string_array(record,aux_str_array))!= OK)
 		return st;
+	
+	destroy_string_array(&aux_str_array,l);
 	free(line);
 	if(aux_eof == TRUE)
 		*eof = TRUE;	
+	
 	return OK;
 }
 

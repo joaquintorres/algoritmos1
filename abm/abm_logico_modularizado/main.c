@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 	
 	/*PROCESAMIENTO*/
 
-	if ((st = process_addition_records(file_inventory,file_additions, file_result, LINE_DELIMITER, FIELD_DELIMITER)) != OK)
+	if ((st = process_addition_records(file_inventory,file_additions, file_result, FIELD_DELIMITER, LINE_DELIMITER)) != OK)
 	{	
 		fclose(file_inventory);
 		fclose(file_additions);
@@ -93,10 +93,11 @@ int main(int argc, char *argv[])
 	fclose(file_additions);
 	if ((fclose(file_result)) == EOF)
 		return ERROR_DISK_SPACE;
-	
+	/*
 	if(remove(inventory_file_path))
 		return ERROR_OUTPUT_FILE;
 	if(rename(result_file_path, inventory_file_path))
 		return ERROR_OUTPUT_FILE;
+	*/
 	return OK;
 }

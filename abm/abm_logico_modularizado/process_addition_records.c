@@ -21,6 +21,7 @@ status_t process_addition_records(FILE * inv_file,FILE * mod_file, FILE * new_fi
 	record_t record_inv;
 	record_t record_mod;
 	status_t st;
+	puts("process_addition_records()");
 	/*n1 y n2 indican si se llegó al fin del archivo y st si hubo un error */
 	if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, line_del, &n1)) != OK) 
 		return st;
@@ -28,7 +29,7 @@ status_t process_addition_records(FILE * inv_file,FILE * mod_file, FILE * new_fi
 	if ((st = read_record_from_CSV_file(&record_mod,mod_file, field_del, line_del, &n2)) != OK) 
 		return st;
 
-	while ((n1 && n2) == TRUE)
+	while ((n1 == FALSE) && (n2 == FALSE))
 	{
 		if (record_inv.id == record_mod.id)
 			return ERROR_DUPLICATED_KEY;
@@ -50,7 +51,7 @@ status_t process_addition_records(FILE * inv_file,FILE * mod_file, FILE * new_fi
 	}
 
 	/*Se escriben los valores restantes del inventario*/
-	while (n1 == TRUE)
+	while (n1 == FALSE)
 	{
 	if ((st = export_record_to_CSV_file(record_inv,new_file,field_del)) != OK)
 			return st;
@@ -58,7 +59,7 @@ status_t process_addition_records(FILE * inv_file,FILE * mod_file, FILE * new_fi
 			return st;
 	}
 
-	while (n2 == TRUE)
+	while (n2 == FALSE)
 	{
 		if ((st = export_record_to_CSV_file(record_mod,new_file,field_del)) != OK)
 				return st;
