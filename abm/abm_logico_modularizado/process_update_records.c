@@ -1,5 +1,5 @@
 /*  ***************************************************************
-	Algoritmos y Progrmación I - 95.11 - Curso Ing. Martín Cardozo
+	Algoritmos y Programación I - 95.11 - Curso Ing. Martín Cardozo
 	Caso de Estudio N.° 2: Altas, bajas y modificaciones
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
@@ -13,7 +13,7 @@
 #include <string.h>
 #include "types.h"
 #include "utils.h"
-
+#include "records.h"
 
 
 status_t process_update_records(FILE * inv_file,FILE * mod_file, FILE * new_file, char field_del, char line_del)

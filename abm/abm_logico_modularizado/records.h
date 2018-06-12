@@ -3,19 +3,21 @@
 	Caso de Estudio N.° 2: Altas, bajas y modificaciones
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
-	Archivo: process_additions.h
+	Archivo: records.h
 	Descripción: Programa que agrega líneas sobre un archivo CSV a
 	partir de otro. Los archivos deben tener tres campos diferenciados para el ID, 
 	el código de barras y la descripción de un producto.
 	****************************************************************/
-#ifndef PROCESS_ADDITIONS__H
-#define PROCESS_ADDITIONS__H
-
+#ifndef RECORDS__H
+#define RECORDS__H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "types.h"
-#include "utils.h"
 
-status_t process_addition_records(FILE * old_file,FILE * mod_file, FILE * new_file, char line_del, char field_del);
+/*PROTOTIPOS*/
+status_t make_record_from_string_array(record_t * record, char ** string_array);
+status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_del, char line_del, bool_t * eof);
+status_t export_record_to_CSV_file(record_t record,FILE * target_file,char field_del);
+
 #endif
