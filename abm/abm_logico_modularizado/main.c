@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 	
 	/*PROCESAMIENTO*/
 
-	if ((st = process_addition_records(file_inventory,file_additions, file_result, FIELD_DELIMITER, LINE_DELIMITER)) != OK)
+	if ((st = process_addition_records(file_inventory,file_additions, file_result, FIELD_DELIMITER)) != OK)
 	{	
 		fclose(file_inventory);
 		fclose(file_additions);

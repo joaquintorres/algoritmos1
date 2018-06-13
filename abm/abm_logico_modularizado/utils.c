@@ -16,7 +16,7 @@
 /*Lee líneas de un archivo, separando una línea con algún delimitador pasado como argumento.
 La línea se devuelve por puntero como una cadena de caracteres. Además, se devuelve un booleano
 por puntero indicando si se llegó al EOF o no (con TRUE y FALSE respectivamente).*/
-status_t read_line_from_file(FILE * file, char del, char ** s, bool_t * eof)
+status_t read_line_from_file(FILE * file, char ** s, bool_t * eof)
 {
 	size_t used_size;
 	size_t alloc_size;
@@ -30,8 +30,19 @@ status_t read_line_from_file(FILE * file, char del, char ** s, bool_t * eof)
 		return ERROR_MEMORY;
 	alloc_size = INIT_CHOP;
 	used_size = 0;
-	while ((c = fgetc(file))!= del && c != EOF)
+
+	if ((c = fgetc(file)) == EOF)
 	{
+		*eof = TRUE;
+		return OK;
+	}else
+	{
+		ungetc(c,file);
+	}
+	printf("%c", c);
+	while ((c= fgetc(file)) != '\n' && c != EOF)
+	{
+		printf("%c", c);
 		if (used_size == alloc_size - 1)
 		{
 			if ((aux = (char *) realloc(*s, (alloc_size + CHOP_SIZE)*sizeof(char))) == NULL)
@@ -45,8 +56,8 @@ status_t read_line_from_file(FILE * file, char del, char ** s, bool_t * eof)
 		}
 		(*s)[used_size++] = c;
 	}
-	*eof = (c == EOF) ? TRUE:FALSE;
-	return OK;	
+	printf("%c", c);
+	return OK;
 }
 
 /*Recibe una cadena de caracteres y devuelve por puntero la misma cadena copiada.*/
@@ -83,6 +94,7 @@ status_t split(const char * s,char *** fields, char del, size_t * l)
 		return ERROR_MEMORY;
 
 	}
+	*l = 0;
 	for (i = 0; line [i]; i++)
 	{
 		if (line[i] == del)

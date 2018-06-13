@@ -15,9 +15,11 @@
 #include <string.h>
 #include "types.h"
 
+#define MAX_FIELDS 3
+#define MIN_FIELDS 3
 /*PROTOTIPOS*/
 status_t make_record_from_string_array(record_t * record, char ** string_array);
-status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_del, char line_del, bool_t * eof);
+status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_del, bool_t * eof);
 status_t export_record_to_CSV_file(record_t record,FILE * target_file,char field_del);
 
 #endif

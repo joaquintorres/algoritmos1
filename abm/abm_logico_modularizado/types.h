@@ -20,6 +20,8 @@
 #define FIELD_POSITION_FOR_BARCODE 1
 #define FIELD_POSITION_FOR_DESCRIPTION 2
 
+#define EAN_BARCODE_LEN 13
+
 typedef enum {
 	OK,
 	ERROR_NULL_POINTER,
@@ -29,9 +31,11 @@ typedef enum {
 	ERROR_INVALID_DATA,
 	ERROR_INVALID_KEY,
 	ERROR_DUPLICATED_KEY,
+	ERROR_INVALID_BARCODE,
 	ERROR_NONEXISTENT_RECORD,
 	ERROR_INVENTORY_FILE,
 	ERROR_ADDITIONS_FILE,
+	ERROR_NUMBER_OF_FIELDS,
 	ERROR_OUTPUT_FILE,
 	ERROR_DISK_SPACE
 } status_t;
@@ -43,7 +47,7 @@ typedef enum{
 
 typedef struct {
 	size_t id;
-	char * barcode; /*Falta castear char * en el código para poder usar char[13+1]*/
+	char barcode[EAN_BARCODE_LEN + 1];
 	char * description; 
 } record_t;
 

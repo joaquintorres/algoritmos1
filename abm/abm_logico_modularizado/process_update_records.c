@@ -16,7 +16,7 @@
 #include "records.h"
 
 
-status_t process_update_records(FILE * inv_file,FILE * mod_file, FILE * new_file, char field_del, char line_del)
+status_t process_update_records(FILE * inv_file,FILE * mod_file, FILE * new_file, char field_del)
 {
 	bool_t n1; /*Variable auxiliar de estado de la lectura del inventario*/
 	bool_t n2; /*Variable auxiliar de estado de la lectura de las modificaciones*/
@@ -27,10 +27,10 @@ status_t process_update_records(FILE * inv_file,FILE * mod_file, FILE * new_file
 	if (inv_file == NULL || mod_file == NULL || new_file == NULL)
 		return ERROR_NULL_POINTER;
 	/*n1 y n2 indican si se llegó al fin del archivo y st si hubo un error */
-	if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, line_del, &n1)) != OK) 
+	if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, &n1)) != OK) 
 		return st;
 
-	if ((st = read_record_from_CSV_file(&record_mod,mod_file, field_del, line_del, &n2)) != OK) 
+	if ((st = read_record_from_CSV_file(&record_mod,mod_file, field_del, &n2)) != OK) 
 		return st;
 
 	while (n1 == FALSE && n2 == FALSE)
@@ -38,9 +38,9 @@ status_t process_update_records(FILE * inv_file,FILE * mod_file, FILE * new_file
 
 		if (record_inv.id < record_mod.id)
 		{
-			if ((st = export_record_to_CSV_file(record_inv,new_file,field_del)) != OK)
+			if ((st = export_record_to_CSV_file(record_inv,new_file, field_del)) != OK)
 				return st;
-			if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, line_del, &n1)) != OK) 
+			if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, &n1)) != OK) 
 				return st;
 		}else
 		{	
@@ -48,9 +48,9 @@ status_t process_update_records(FILE * inv_file,FILE * mod_file, FILE * new_file
 			{
 				if ((st = export_record_to_CSV_file(record_mod,new_file,field_del)) != OK)
 				return st;
-				if ((st = read_record_from_CSV_file(&record_mod,mod_file, field_del, line_del, &n2)) != OK) 
+				if ((st = read_record_from_CSV_file(&record_mod,mod_file, field_del, &n2)) != OK) 
 				return st;
-				if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, line_del, &n1)) != OK) 
+				if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, &n1)) != OK) 
 				return st;
 			}else
 			{
@@ -66,7 +66,7 @@ status_t process_update_records(FILE * inv_file,FILE * mod_file, FILE * new_file
 	{
 	if ((st = export_record_to_CSV_file(record_inv,new_file,field_del)) != OK)
 			return st;
-	if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, line_del, &n1)) != OK) 
+	if ((st = read_record_from_CSV_file(&record_inv,inv_file, field_del, &n1)) != OK) 
 			return st;
 	}
 

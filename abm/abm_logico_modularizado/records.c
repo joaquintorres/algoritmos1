@@ -13,6 +13,7 @@
 #include <string.h>
 #include "utils.h"
 #include "types.h"
+#include "records.h"
 
 /*Pasa un arreglo de cadenas a una estructura record_t, destruye la estructura*/
 status_t make_record_from_string_array(record_t * record, char ** string_array)
@@ -30,8 +31,11 @@ status_t make_record_from_string_array(record_t * record, char ** string_array)
 	record -> id = strtoul(aux, &temp, 10);
 	if (*temp && *temp != '\n')
 		return ERROR_INVALID_KEY;
-	if(strdupl(string_array[FIELD_POSITION_FOR_BARCODE],&(record -> barcode)))
-		return ERROR_MEMORY;
+
+	if ((strlen(string_array[FIELD_POSITION_FOR_BARCODE])) != EAN_BARCODE_LEN)
+		return ERROR_INVALID_BARCODE;
+
+	strcpy(record -> barcode, string_array[FIELD_POSITION_FOR_BARCODE]);
 
 	if(strdupl(string_array[FIELD_POSITION_FOR_DESCRIPTION],&(record -> description)))
 		return ERROR_MEMORY;
@@ -39,7 +43,7 @@ status_t make_record_from_string_array(record_t * record, char ** string_array)
 	return OK;
 }
 /*Lee del archivo CSV un registro, que pasa por puntero, además de un puntero a bool_t que indica si se encontró EOF*/
-status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_del, char line_del, bool_t * eof)
+status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_del, bool_t * eof)
 {
 	char * line;
 	char ** aux_str_array;
@@ -52,7 +56,7 @@ status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_de
 	if (record == NULL || file == NULL)
 		return ERROR_NULL_POINTER;
 
-	if ((st = read_line_from_file(file, line_del, &line, &aux_eof)) != OK)
+	if ((st = read_line_from_file(file, &line, &aux_eof)) != OK)
 		return st;
 	
 
@@ -64,6 +68,9 @@ status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_de
 
 	if ((st = split(line, &aux_str_array,field_del, &l)) != OK)
 		return st;
+
+	if (l < MIN_FIELDS || l > MAX_FIELDS)
+		return ERROR_NUMBER_OF_FIELDS;
 
 	if((st = make_record_from_string_array(record,aux_str_array))!= OK)
 		return st;

@@ -21,7 +21,7 @@
 
 
 /*PROTOTIPOS*/
-status_t read_line_from_file(FILE * file, char del, char ** s, bool_t * eof);
+status_t read_line_from_file(FILE * file, char ** s, bool_t * eof);
 status_t strdupl(const char * s, char ** t);
 status_t split(const char * s,char *** fields, char del, size_t * l);
 status_t destroy_string_array(char *** p, size_t l);

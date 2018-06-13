@@ -30,9 +30,7 @@
 
 #define TEMP_FILENAME "salida.tmp"
 
-#define LINE_DELIMITER '|'
-#define FIELD_DELIMITER ','  /*Falta revisar.*/
-
+#define FIELD_DELIMITER ','
 
 status_t validate_arguments(int argc, char * argv[], char * inventory_file_path[], char * additions_file_path[]);
 
