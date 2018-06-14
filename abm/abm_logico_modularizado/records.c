@@ -37,6 +37,7 @@ status_t make_record_from_string_array(record_t * record, char ** string_array)
 
 	strcpy(record -> barcode, string_array[FIELD_POSITION_FOR_BARCODE]);
 
+	/*free(&(record->description));*/
 	if(strdupl(string_array[FIELD_POSITION_FOR_DESCRIPTION],&(record -> description)))
 		return ERROR_MEMORY;
 
