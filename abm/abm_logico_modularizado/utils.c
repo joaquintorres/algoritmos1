@@ -35,16 +35,14 @@ status_t read_line_from_file(FILE * file, char ** s, bool_t * eof)
 	c = fgetc(file);
 	if (c == EOF)
 	{
-		puts("EOF found.");
 		*eof = TRUE;
 		return OK;
 	}else
 		ungetc(c,file);
 	
-	printf("%c", c);
+	
 	while ((c= fgetc(file)) != '\n' && c != EOF)
 	{
-		printf("%c", c);
 		if (used_size == alloc_size - 1)
 		{
 			if ((aux = (char *) realloc(*s, (alloc_size + CHOP_SIZE)*sizeof(char))) == NULL)
@@ -58,8 +56,6 @@ status_t read_line_from_file(FILE * file, char ** s, bool_t * eof)
 		}
 		(*s)[used_size++] = c;
 	}
-	printf("%c", c);
-	/**eof = (c == EOF) ? TRUE:FALSE; */
 	return OK;
 }
 

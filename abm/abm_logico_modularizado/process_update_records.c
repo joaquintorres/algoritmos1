@@ -23,6 +23,8 @@ status_t process_update_records(FILE * inv_file,FILE * mod_file, FILE * new_file
 	record_t record_inv;
 	record_t record_mod;
 	status_t st;
+	record_inv.description = NULL;
+	record_mod.description = NULL;
 
 	if (inv_file == NULL || mod_file == NULL || new_file == NULL)
 		return ERROR_NULL_POINTER;

@@ -19,7 +19,7 @@
 status_t make_record_from_string_array(record_t * record, char ** string_array)
 {
 	char * temp;
-	char * aux;
+	char * aux = NULL;
 
 	
 	if (record == NULL || string_array == NULL)
@@ -37,7 +37,7 @@ status_t make_record_from_string_array(record_t * record, char ** string_array)
 
 	strcpy(record -> barcode, string_array[FIELD_POSITION_FOR_BARCODE]);
 
-	/*free(&(record->description));*/
+	free(record->description);
 	if(strdupl(string_array[FIELD_POSITION_FOR_DESCRIPTION],&(record -> description)))
 		return ERROR_MEMORY;
 
@@ -72,7 +72,7 @@ status_t read_record_from_CSV_file(record_t * record, FILE * file, char field_de
 
 	if (l < MIN_FIELDS || l > MAX_FIELDS)
 		return ERROR_NUMBER_OF_FIELDS;
-
+	
 	if((st = make_record_from_string_array(record,aux_str_array))!= OK)
 		return st;
 	

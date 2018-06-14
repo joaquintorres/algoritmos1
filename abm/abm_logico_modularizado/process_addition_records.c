@@ -22,7 +22,9 @@ status_t process_addition_records(FILE * inv_file,FILE * mod_file, FILE * new_fi
 	record_t record_inv;
 	record_t record_mod;
 	status_t st;
-
+	record_inv.description = NULL;
+	record_mod.description = NULL;
+	
 	if (inv_file == NULL || mod_file == NULL || new_file == NULL)
 		return ERROR_NULL_POINTER;
 	/*n1 y n2 indican si se llegó al fin del archivo y st si hubo un error */
