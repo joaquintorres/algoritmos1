@@ -11,6 +11,7 @@
 #define TYPES__H
 
 #include <stdio.h>
+#include <time.h>
 
 typedef enum {
 	OK,
@@ -18,7 +19,7 @@ typedef enum {
 	ERROR_INVALID_NUMBER_OF_ARGS,
 	ERROR_INVALID_ARG,
 	ERROR_INVALID_FLAG,
-	ERROR_CLOCK /*Revisar significatividad*/
+	ERROR_CLOCK
 } status_t;
 
 typedef enum {
@@ -28,4 +29,33 @@ typedef enum {
 	SERIOUSNESS_FATAL_ERROR
 } error_seriousness_t;
 
+typedef enum{
+	FMT_DAY_MO_YR,
+	FMT_YR_DAY,
+	FMT_YR_MO_DAY,
+	FMT_YR_MO_DAY_HR_MIN_SEC,
+	FMT_YR_DAY_HR_MIN_SEC
+} format_t;
+
+typedef status_t (*printer_t)(struct tm * time);
+
+typedef struct {
+	status_t id;
+	char * message;
+} error_t;
+
+typedef struct {
+	error_seriousness_t id;
+	char * message;
+} seriousness_t;
+
+typedef struct {
+	format_t id;
+	char * argument;
+} arg_format_t;
+
+typedef struct {
+	format_t id;
+	printer_t printer;
+} printer_format_t;
 #endif

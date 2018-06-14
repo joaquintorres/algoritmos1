@@ -1,5 +1,5 @@
 /*  ***************************************************************
-	Algoritmos y Progrmación I - 95.11 - Curso Ing. Martín Cardozo
+	Algoritmos y Programación I - 95.11 - Curso Ing. Martín Cardozo
 	Trabajo Práctico N.° 1: Fecha y hora del sistema
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
@@ -12,6 +12,6 @@
 
 #include <stdio.h>
 
-status_t sysdate(char * format);
+status_t sysdate(format_t format);
 
 #endif

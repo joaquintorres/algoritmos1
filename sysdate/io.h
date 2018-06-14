@@ -45,6 +45,6 @@
 /************/
 
 /*PROTOTIPOS*/
-void show_error_message(error_seriousness_t seriousness, status_t status);
+void print_error_message(error_seriousness_t seriousness, status_t status);
 
 #endif

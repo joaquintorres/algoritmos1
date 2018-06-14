@@ -1,5 +1,5 @@
 /*  ***************************************************************
-	Algoritmos y Progrmación I - 95.11 - Curso Ing. Martín Cardozo
+	Algoritmos y Programación I - 95.11 - Curso Ing. Martín Cardozo
 	Trabajo Práctico N.° 1: Fecha y hora del sistema
 	Alumno: Joaquín Torres
 	Correo Electrónico: joaquintorres1997@gmail.com
@@ -13,51 +13,34 @@
 #include "types.h"
 #include "formats.h"
 
-status_t sysdate(char * format)
+printer_format_t printer_dictionary[MAX_FORMATS]={
+	{FMT_DAY_MO_YR, print_date_DDMMAAAA},
+	{FMT_YR_DAY, print_date_AAAADDD},
+	{FMT_YR_MO_DAY, print_date_AAAAMMDD},
+	{FMT_YR_MO_DAY_HR_MIN_SEC, print_date_AAAAMMDDHHmmSS},
+	{FMT_YR_DAY_HR_MIN_SEC, print_date_AAAADDDHHmmSS}
+};
+
+status_t sysdate(format_t format)
 {
 	time_t raw_time;
 	struct tm * calendar_time;
 	status_t st;
-	if (format == NULL)
-		return ERROR_NULL_POINTER;
+	size_t i;
+
 	if ((raw_time = time(NULL)) == -1)
 		return ERROR_CLOCK;
 	if ((calendar_time = localtime(&raw_time)) == NULL)
 		return ERROR_NULL_POINTER;
-	
-	if (!strcmp(format,FMT_DAY_MO_YR))
-	{
-		if ((st = print_as_day_month_year(calendar_time)) != OK)
-			return st;
-		return OK;
-	}
 
-	if (!strcmp(format,FMT_YR_DAY))
+	for (i = 0; i < MAX_FORMATS; i++)
 	{
-		if ((st = print_as_year_day(calendar_time)) != OK)
-			return st;
-		return OK;
-	}
-	
-	if (!strcmp(format,FMT_YR_MO_DAY))
-	{
-		if ((st = print_as_year_month_day(calendar_time)) != OK)
-			return st;
-		return OK;
-	}
-
-	if (!strcmp(format,FMT_YR_MO_DAY_HR_MIN_SEC))
-	{
-		if ((st = print_as_year_month_day_hours_minutes_seconds(calendar_time)) != OK)
-			return st;
-		return OK;
-	}
-
-	if (!strcmp(format,FMT_YR_DAY_HR_MIN_SEC))
-	{
-		if ((st = print_as_yearday_hours_minutes_seconds(calendar_time)) != OK)
-			return st;
-		return OK;
+		if (format == printer_dictionary[i].id)
+		{
+			if ((st = printer_dictionary[i].printer(calendar_time)) != OK)
+				return st;
+			return OK;
+		}
 	}
 	return OK;
 }
