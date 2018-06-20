@@ -22,11 +22,11 @@
 
 #define MAX_FORMATS 5
 
-status_t print_date_DDMMAAAA(struct tm * time);
-status_t print_date_AAAADDD(struct tm * time);
-status_t print_date_AAAAMMDD(struct tm * time);
-status_t print_date_AAAAMMDDHHmmSS(struct tm * time);
-status_t print_date_AAAADDDHHmmSS(struct tm * time);
+status_t print_date_DDMMAAAA(time_t raw_time);
+status_t print_date_AAAADDD(time_t raw_time);
+status_t print_date_AAAAMMDD(time_t raw_time);
+status_t print_date_AAAAMMDDHHmmSS(time_t raw_time);
+status_t print_date_AAAADDDHHmmSS(time_t raw_time);
 
 
 #endif

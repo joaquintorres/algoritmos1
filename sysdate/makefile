@@ -2,7 +2,7 @@ CFLAGS=-ansi -pedantic -Wall
 CC=gcc
 all: sysdate
 sysdate: main.o date.o io.o sysdate.o
-	$(CC) $(CFLAGS) -o sysdate main.o date.o sysdate.o
+	$(CC) $(CFLAGS) -o sysdate main.o date.o io.o sysdate.o
 main.o: main.c types.h formats.h sysdate.h io.h
 	$(CC) $(CFLAGS) -o main.o -c main.c
 date.o: date.c types.h formats.h

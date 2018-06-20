@@ -37,8 +37,6 @@ typedef enum{
 	FMT_YR_DAY_HR_MIN_SEC
 } format_t;
 
-typedef status_t (*printer_t)(struct tm * time);
-
 typedef struct {
 	status_t id;
 	char * message;
@@ -54,8 +52,4 @@ typedef struct {
 	char * argument;
 } arg_format_t;
 
-typedef struct {
-	format_t id;
-	printer_t printer;
-} printer_format_t;
 #endif
