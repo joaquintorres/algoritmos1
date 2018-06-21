@@ -17,4 +17,9 @@ typedef enum {
 	FMT_HTML
 } format_t;
 
+typedef enum {
+	SORT_NAME,
+	SORT_ARTIST,
+	SORT_GENRE
+} sort_t;
 #endif
