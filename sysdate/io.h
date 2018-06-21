@@ -47,4 +47,11 @@
 /*PROTOTIPOS*/
 void print_error_message(error_seriousness_t seriousness, status_t status);
 
+typedef enum {
+	SERIOUSNESS_TRIVIAL,
+	SERIOUSNESS_WARNING,
+	SERIOUSNESS_ERROR,
+	SERIOUSNESS_FATAL_ERROR
+} error_seriousness_t;
+
 #endif

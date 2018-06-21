@@ -20,12 +20,12 @@
 status_t validate_arguments(size_t argc, char * argv[], format_t * format);
 /************/
 /*DICCIONARIO DE FORMATOS*/
-arg_format_t format_dictionary[MAX_FORMATS]={
-	{FMT_DAY_MO_YR, ARG_FMT_DAY_MO_YR},
-	{FMT_YR_DAY, ARG_FMT_YR_DAY},
-	{FMT_YR_MO_DAY, ARG_FMT_YR_MO_DAY},
-	{FMT_YR_MO_DAY_HR_MIN_SEC, ARG_FMT_YR_MO_DAY_HR_MIN_SEC},
-	{FMT_YR_DAY_HR_MIN_SEC, ARG_FMT_YR_DAY_HR_MIN_SEC}
+char * format_dictionary[MAX_FORMATS]={
+	ARG_FMT_DAY_MO_YR,
+	ARG_FMT_YR_DAY,
+	ARG_FMT_YR_MO_DAY,
+	ARG_FMT_YR_MO_DAY_HR_MIN_SEC,
+	ARG_FMT_YR_DAY_HR_MIN_SEC
 };
 /*************************/
 
@@ -68,9 +68,9 @@ status_t validate_arguments(size_t argc, char * argv[], format_t * format)
 
 	for (i = 0; i < MAX_FORMATS; i++)
 	{
-		if (strcmp(arg_value_fmt, format_dictionary[i].argument) == 0)
+		if (strcmp(arg_value_fmt, format_dictionary[i]) == 0)
 		{
-			*format = format_dictionary[i].id;
+			*format = i;
 			return OK;
 		}
 	}

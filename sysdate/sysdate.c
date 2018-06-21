@@ -15,7 +15,7 @@
 
 typedef status_t (*printer_t)(time_t raw_time);
 
-printer_t printer_dictionary[MAX_FORMATS]={
+printer_t print_format[MAX_FORMATS]={
 	print_date_DDMMAAAA,
 	print_date_AAAADDD,
 	print_date_AAAAMMDD,
@@ -31,7 +31,7 @@ status_t sysdate(format_t format)
 	if ((raw_time = time(NULL)) == -1)
 		return ERROR_CLOCK;
 	
-	if ((st = printer_dictionary[format](raw_time)) != OK)
+	if ((st = print_format[format](raw_time)) != OK)
 		return st;
 
 	return OK;

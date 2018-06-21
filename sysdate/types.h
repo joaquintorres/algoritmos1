@@ -37,19 +37,4 @@ typedef enum{
 	FMT_YR_DAY_HR_MIN_SEC
 } format_t;
 
-typedef struct {
-	status_t id;
-	char * message;
-} error_t;
-
-typedef struct {
-	error_seriousness_t id;
-	char * message;
-} seriousness_t;
-
-typedef struct {
-	format_t id;
-	char * argument;
-} arg_format_t;
-
 #endif
