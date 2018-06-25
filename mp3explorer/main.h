@@ -31,6 +31,5 @@
 #define ARG_SORT_ARTIST "artist"
 #define ARG_SORT_GENRE "genre"
 
-/*PROTOTIPOS*/
-status_t validate_arguments(size_t argc, char * argv[], format_t * format, sort_t * sort);
+/*PROTOTIPOS*/status_t validate_arguments(size_t argc, char * argv[], format_t * format, sort_t * sort, char * output_filename[], char ***input_files, size_t * len);
 #endif
