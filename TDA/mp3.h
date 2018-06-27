@@ -21,12 +21,9 @@ typedef enum {
 	ERROR_DISK_SPACE
 } status_t; /*En types.h*/
 
-typedef struct {
-	char title[LEXEM_SPAN_TITLE+1];
-	char artist[LEXEM_SPAN_ARTIST+1];
-	char genre;
-} ADT_MP3_Track_t;
 
+struct ADT_MP3_Track_t;
+typedef struct ADT_MP3_Track_t ADT_MP3_Track_t;
 /*PRIMITIVAS*/
 
 /*Crea un nuevo tema vacío*/

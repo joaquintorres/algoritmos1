@@ -36,18 +36,14 @@
 
 /*PROTOTIPOS FUNCIONES PRIVADAS*/
 status_t _get_mp3_header_parameters (char * title,char * artist,char * genre,FILE * fo);
+status_t _strdupl(const char * s, char ** t);
 /*******************************/
-status_t strdupl(const char * s, char ** t)
-{
-	size_t i;
 
-	if (s == NULL || t == NULL)
-		return ERROR_NULL_POINTER;
-	if ((*t = (char *) malloc((strlen(s)+1)*sizeof(char))) == NULL)
-		return ERROR_MEMORY;
-	for (i = 0;((*t)[i] = s[i]);i++);
-	return OK;
-}
+struct ADT_MP3_Track_t {
+	char title[LEXEM_SPAN_TITLE+1];
+	char artist[LEXEM_SPAN_ARTIST+1];
+	char genre;
+};
 
 status_t ADT_MP3_Track_new(ADT_MP3_Track_t ** p)
 {
@@ -105,7 +101,7 @@ char * ADT_MP3_Track_get_title(const ADT_MP3_Track_t * p)
 	char * aux;
 	if (p == NULL)
 		return NULL;
-	strdupl(p->title,&aux);
+	_strdupl(p->title,&aux);
 	return aux;	
 }
 /*USA MEMORIA DINAMICA. LIBERAR.*/
@@ -114,7 +110,7 @@ char * ADT_MP3_Track_get_artist(const ADT_MP3_Track_t * p)
 	char * aux;
 	if (p == NULL)
 		return NULL;
-	strdupl(p->artist,&aux);
+	_strdupl(p->artist,&aux);
 	return aux;	
 }
 
@@ -214,5 +210,17 @@ status_t _get_mp3_header_parameters (char * title,char * artist,char * genre,FIL
 	buf[LEXEM_SPAN_GENRE] = '\0';
 	*genre = buf[0];
 
+	return OK;
+}
+
+status_t _strdupl(const char * s, char ** t)
+{
+	size_t i;
+
+	if (s == NULL || t == NULL)
+		return ERROR_NULL_POINTER;
+	if ((*t = (char *) malloc((strlen(s)+1)*sizeof(char))) == NULL)
+		return ERROR_MEMORY;
+	for (i = 0;((*t)[i] = s[i]);i++);
 	return OK;
 }
