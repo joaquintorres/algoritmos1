@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "mp3.h"
 
 /*CONSTANTES DEL ESTÁNDAR ID3V1*/
@@ -34,9 +35,13 @@
 #define XML_TAG_CONTENT_ARTIST "artist"
 #define XML_TAG_CONTENT_GENRE  "genre"
 
+/*CONSTANTES FUNCIONES PRIVADAS*/
+#define MAX_STR 100 /*_compare_strings evita usar memoria dinámica para strings que tienen un tamaño fijo.*/
+
 /*PROTOTIPOS FUNCIONES PRIVADAS*/
 status_t _get_mp3_header_parameters (char * title,char * artist,char * genre,FILE * fo);
 status_t _strdupl(const char * s, char ** t);
+int _compare_strings(const char * a, const char * b);
 /*******************************/
 
 struct ADT_MP3_Track_t {
@@ -57,6 +62,14 @@ status_t ADT_MP3_Track_new(ADT_MP3_Track_t ** p)
 	return OK;
 }
 
+status_t ADT_MP3_Track_delete(ADT_MP3_Track_t ** p)
+{
+	if (p == NULL)
+		return ERROR_NULL_POINTER;
+	free(*p);
+	*p = NULL;
+	return OK;
+}
 
 status_t ADT_MP3_Track_new_from_parameters(ADT_MP3_Track_t ** p, const char * title, const char * artist, char genre)
 {
@@ -149,6 +162,22 @@ status_t ADT_MP3_Track_set_genre(ADT_MP3_Track_t ** p, char genre)
 	return OK;
 }
 
+
+int ADT_MP3_Track_compare_by_title(const ADT_MP3_Track_t * t1, const ADT_MP3_Track_t * t2)
+{
+	return (_compare_strings(t1->title,t2->title));
+}
+
+int ADT_MP3_Track_compare_by_artist(const ADT_MP3_Track_t * t1, const ADT_MP3_Track_t * t2)
+{
+	return (_compare_strings(t1->artist,t2->artist));
+}
+
+int ADT_MP3_Track_compare_by_genre(const ADT_MP3_Track_t * t1, const ADT_MP3_Track_t * t2)
+{
+	return((int)(t1->genre - t2->genre));
+}
+
 status_t ADT_MP3_Track_export_as_CSV(const ADT_MP3_Track_t * p, char del, FILE * fo)
 {
 	if (p == NULL)
@@ -223,4 +252,22 @@ status_t _strdupl(const char * s, char ** t)
 		return ERROR_MEMORY;
 	for (i = 0;((*t)[i] = s[i]);i++);
 	return OK;
+}
+
+int _compare_strings(const char * a, const char * b)
+{
+	size_t i;
+	char  low_a[MAX_STR]; /*se evita el uso de memoria estática, útil por*/
+	char  low_b[MAX_STR];
+	/*se crea una copia de los argumentos*/
+	for (i = 0; (low_a[i] = a[i]); i++);
+	for (i = 0; (low_b[i] = b[i]); i++);
+
+	/*se pasan las copias a minúsculas*/
+	for (i = 0; i < strlen(low_a); i++)
+		low_a[i] = tolower(low_a[i]);
+	for (i = 0; i < strlen(low_b); i++)
+		low_b[i] = tolower(low_b[i]);
+
+	return (strcmp(low_a,low_b));
 }

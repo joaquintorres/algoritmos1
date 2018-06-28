@@ -102,10 +102,13 @@ void * ADT_Vector_get_element(const ADT_Vector_t * v, int position)
 
 status_t ADT_Vector_set_element(ADT_Vector_t ** p, int position, void * new_element)
 {
+	status_t st;
 	if (p == NULL || new_element == NULL)
 		return ERROR_NULL_POINTER;
 	if (position > ((*p)->size))
 		return ERROR_OUT_OF_BOUNDS;
+	if ((st = (*p)->destructor((*p)->elements[position])) != OK) /*destruye el elemento*/
+		return st;
 	(*p)->elements[position] = new_element;
 	return OK;
 }

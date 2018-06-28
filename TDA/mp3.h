@@ -29,6 +29,9 @@ typedef struct ADT_MP3_Track_t ADT_MP3_Track_t;
 /*Crea un nuevo tema vacío*/
 status_t ADT_MP3_Track_new(ADT_MP3_Track_t ** p);
 
+/*Borra un tema ya creado. IMPORTANTE: borrar un tema declarado pero no inicializado resulta en error*/
+status_t ADT_MP3_Track_delete(ADT_MP3_Track_t ** p);
+
 /*Crea un nuevo tema a partir de los parámetros título, artista y género*/
 status_t ADT_MP3_Track_new_from_parameters(ADT_MP3_Track_t ** p, const char * title, const char * artist, char genre);
 
@@ -74,3 +77,14 @@ status_t ADT_MP3_Track_export_as_CSV(const ADT_MP3_Track_t * p, char del, FILE *
 /*Exporta el tema en formato XML*/
 status_t ADT_MP3_Track_export_as_XML(const ADT_MP3_Track_t * p, FILE * fo);
 
+/*Compara por título, devuelve un número negativo, nulo o positivo si el título de 
+  t1 es menor, igual o mayor al título de t2, respectivamente*/
+int ADT_MP3_Track_compare_by_title(const ADT_MP3_Track_t * t1, const ADT_MP3_Track_t * t2);
+
+/*Compara por artista, devuelve un número negativo, nulo o positivo si el artista de 
+  t1 es menor, igual o mayor al artista de t2, respectivamente*/
+int ADT_MP3_Track_compare_by_artist(const ADT_MP3_Track_t * t1, const ADT_MP3_Track_t * t2);
+
+/*Compara por género, devuelve un número negativo, nulo o positivo si el género de 
+  t1 es menor, igual o mayor al género de t2, respectivamente*/
+int ADT_MP3_Track_compare_by_genre(const ADT_MP3_Track_t * t1, const ADT_MP3_Track_t * t2);
