@@ -10,6 +10,9 @@ struct ADT_Vector_t{
 	void ** elements;
 	size_t size;
 	size_t alloc_size;
+	comparator_t comparator;
+	destructor_t destructor;
+	printer_t printer;
 };
 
 /*Asigna memoria e inicializa los atributos a un valor seguro, Y NADA MÁS.
@@ -17,7 +20,6 @@ struct ADT_Vector_t{
 status_t ADT_Vector_new(ADT_Vector_t ** p)
 {
 	size_t i;
-
 	if (p == NULL)
 		return ERROR_NULL_POINTER;
 	if ((*p = (ADT_Vector_t *) malloc(sizeof(ADT_Vector_t))) == NULL)
@@ -29,16 +31,16 @@ status_t ADT_Vector_new(ADT_Vector_t ** p)
 		*p = NULL;
 		return ERROR_MEMORY;
 	}
+
 	for (i = 0; i < INIT_CHOP; i++)
 		(*p)->elements[i] = NULL;
 
-	(*p)->elements = NULL;
 	(*p)->size = 0;
 	(*p)->alloc_size = INIT_CHOP;
 	/******DESTRUCTORES,COMPARADORES, ETC.**********/
-	/*(*p)->destructor = NULL;
+	(*p)->destructor = NULL;
 	(*p)->comparator = NULL;
-	(*p)->printer = NULL;*/
+	(*p)->printer = NULL;
 	/***********************************************/
 	return OK;
 }
@@ -49,16 +51,18 @@ status_t ADT_Vector_append_element(ADT_Vector_t ** p, void * new_element)
 	void ** aux;
 	if (p == NULL || new_element == NULL)
 		return ERROR_NULL_POINTER;
+
 	if (((*p)->alloc_size) == ((*p)->size))
 	{
-		(*p)->alloc_size+=CHOP_SIZE;
-		if ((aux = (void **) realloc((*p)->elements, CHOP_SIZE * sizeof(void *))) == NULL)
+		(*p)->alloc_size += CHOP_SIZE;
+		if ((aux = (void **) realloc((*p)->elements, ((*p)->alloc_size) * sizeof(void *))) == NULL)
 		{
-			/*Debería destruir todo el trabajo? I don't think so.*/
+			ADT_Vector_delete(p);
 			return ERROR_MEMORY;
 		}
 		(*p)->elements = aux;
 	}
+	
 	(*p)->elements[(*p)->size] = new_element;
 	((*p)->size)++;
 	return OK;
@@ -66,7 +70,7 @@ status_t ADT_Vector_append_element(ADT_Vector_t ** p, void * new_element)
 
 /*Destruye el vector, el segundo argumento que se le pasa es un puntero
   a una función que indica cómo borrar cada globito.*/
-status_t ADT_Vector_delete(ADT_Vector_t ** p, status_t (*pf)(void *))
+status_t ADT_Vector_delete(ADT_Vector_t ** p)
 {
 	size_t i;
 	status_t st;
@@ -75,7 +79,7 @@ status_t ADT_Vector_delete(ADT_Vector_t ** p, status_t (*pf)(void *))
 		return ERROR_NULL_POINTER;
 	for (i= 0; i < (*p)->size; i++)
 	{
-		if ((st = (*pf)((*p)->elements[i])) != OK) /*Con destructor pasado como pf*/
+		if ((st = (*p)->destructor((*p)->elements[i])) != OK)
 			return st;
 		(*p)->elements[i] = NULL;
 	}
@@ -86,7 +90,7 @@ status_t ADT_Vector_delete(ADT_Vector_t ** p, status_t (*pf)(void *))
 	return OK;
 }
 
-
+/**GETTERS Y SETTERS**/
 void * ADT_Vector_get_element(const ADT_Vector_t * v, int position)
 {
 	if (v == NULL)
@@ -106,20 +110,44 @@ status_t ADT_Vector_set_element(ADT_Vector_t ** p, int position, void * new_elem
 	return OK;
 }
 
-bool_t ADT_Vector_is_empty(const ADT_Vector_t * p)
+status_t ADT_Vector_set_destructor(ADT_Vector_t * v, destructor_t pf)
 {
-	return (p->size)?FALSE:TRUE;
-}
-
-status_t ADT_Vector_sort(ADT_Vector_t * v, comparator_t pf)
-{
-	if (v == NULL || pf == NULL)
+	if (v == NULL)
 		return ERROR_NULL_POINTER;
-	qsort(v->elements, v-> size,sizeof(void *), pf);
+	v->destructor = pf;
 	return OK;
 }
 
-bool_t ADT_Vector_equals(const ADT_Vector_t * v1, const ADT_Vector_t * v2, comparator_t pf)
+status_t ADT_Vector_set_comparator(ADT_Vector_t * v, comparator_t pf)
+{
+	if (v == NULL)
+		return ERROR_NULL_POINTER;
+	v->comparator = pf;
+	return OK;
+}
+
+status_t ADT_Vector_set_printer(ADT_Vector_t * v, printer_t pf)
+{
+	if (v == NULL)
+		return ERROR_NULL_POINTER;
+	v->printer = pf;
+	return OK;
+}
+
+bool_t ADT_Vector_is_empty(const ADT_Vector_t * v)
+{
+	return (v->size)?FALSE:TRUE;
+}
+
+status_t ADT_Vector_sort(ADT_Vector_t * v)
+{
+	if (v == NULL)
+		return ERROR_NULL_POINTER;
+	qsort(v->elements, v-> size,sizeof(void *), v->comparator);
+	return OK;
+}
+
+bool_t ADT_Vector_equals(const ADT_Vector_t * v1, const ADT_Vector_t * v2)
 {
 	size_t i;
 
@@ -127,13 +155,13 @@ bool_t ADT_Vector_equals(const ADT_Vector_t * v1, const ADT_Vector_t * v2, compa
 		return FALSE;
 	for (i = 0; i < v1->size; i++)
 	{
-		if ((*pf)(v1->elements[i], v2->elements[i]))
+		if (v1->comparator(v1->elements[i], v2->elements[i]))
 			return FALSE;
 	}
 	return TRUE;
 }
 
-status_t ADT_Vector_export_as_CSV(const ADT_Vector_t * v, void * context, printer_t pf, FILE * fo)
+status_t ADT_Vector_export_as_CSV(const ADT_Vector_t * v, void * context, FILE * fo)
 {
 	size_t i;
 	status_t st;
@@ -142,8 +170,26 @@ status_t ADT_Vector_export_as_CSV(const ADT_Vector_t * v, void * context, printe
 		return ERROR_NULL_POINTER;
 	for (i = 0; i < v->size; i++)
 	{
-		if ((st = (*pf)(v->elements[i], fo)) != OK)
+		if ((st = v->printer(v->elements[i],context, fo)) != OK) /*puntero a función que imprime la línea en CSV*/
 			return st;
 	}
+	return OK;
+}
+
+status_t ADT_Vector_export_as_XML(const ADT_Vector_t * v, void * context, FILE * fo)
+{
+	size_t i;
+	status_t st;
+
+	if (v == NULL || context == NULL)
+		return ERROR_NULL_POINTER;
+	fprintf(fo, "%s\n", XML_HEADER);
+	fprintf(fo, "%s%s%s\n", "<",XML_ELEMENT_TAG,">");
+	for (i = 0; i < v->size; i++)
+	{
+		if ((st = v->printer(v->elements[i],context, fo)) != OK) /*puntero a función que imprime la línea en CSV*/
+			return st;
+	}
+	fprintf(fo, "%s%s%s\n", "</",XML_ELEMENT_TAG,">");
 	return OK;
 }
