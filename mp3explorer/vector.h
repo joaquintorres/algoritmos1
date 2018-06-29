@@ -17,7 +17,7 @@ typedef struct ADT_Vector_t ADT_Vector_t;
 typedef int (*comparator_t)(const void *, const void *);
 typedef status_t (*destructor_t)(void *);
 typedef status_t (*printer_t)(const void * element, void * pcontext, FILE * f);
-
+typedef status_t (*vector_export)(const ADT_Vector_t * v, void * pcontext, FILE * fo);
 /*******************PRIMITIVAS********************/
 
 /*Crea un vector nuevo a partir de una variable previamente declarada como ADT_Vector_t * */

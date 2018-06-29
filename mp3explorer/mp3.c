@@ -202,7 +202,6 @@ status_t ADT_MP3_Track_delete(void * p)
 {
 	if (p == NULL)
 		return ERROR_NULL_POINTER;
-	
 	free(*(ADT_MP3_Track_t **)p);
 	*(ADT_MP3_Track_t **)p = NULL;
 	return OK;
@@ -293,7 +292,6 @@ char * ADT_MP3_Track_get_genre(const ADT_MP3_Track_t * p)
 		return '\0';
 	if (p->genre < MIN_GENRE || p->genre > MAX_GENRE)
 		return UNKNOWN_GENRE_STR;
-	printf("%d\n", p->genre);
 	return (genre_dict[(int) p->genre]);
 }
 
@@ -345,32 +343,32 @@ status_t ADT_MP3_Track_set_genre(ADT_MP3_Track_t ** p, const char * genre)
 
 int ADT_MP3_Track_compare_by_title(const void * pv1, const void * pv2)
 {
-	ADT_MP3_Track_t * t1;
-	ADT_MP3_Track_t * t2;
+	ADT_MP3_Track_t ** t1;
+	ADT_MP3_Track_t ** t2;
 
-	t1 = (ADT_MP3_Track_t *) pv1;
-	t2 = (ADT_MP3_Track_t *) pv2;
-	return (_compare_strings(t1->title,t2->title));
+	t1 = (ADT_MP3_Track_t **) pv1;
+	t2 = (ADT_MP3_Track_t **) pv2;
+	return (_compare_strings((*t1)->title,(*t2)->title));
 }
 
 int ADT_MP3_Track_compare_by_artist(const void * pv1, const void * pv2)
 {
-	ADT_MP3_Track_t * t1;
-	ADT_MP3_Track_t * t2;
+	ADT_MP3_Track_t ** t1;
+	ADT_MP3_Track_t ** t2;
 
-	t1 = (ADT_MP3_Track_t *) pv1;
-	t2 = (ADT_MP3_Track_t *) pv2;
-	return (_compare_strings(t1->artist,t2->artist));
+	t1 = (ADT_MP3_Track_t **) pv1;
+	t2 = (ADT_MP3_Track_t **) pv2;
+	return (_compare_strings((*t1)->artist,(*t2)->artist));
 }
 
 int ADT_MP3_Track_compare_by_genre(const void * pv1, const void * pv2)
 {
-	ADT_MP3_Track_t * t1;
-	ADT_MP3_Track_t * t2;
+	ADT_MP3_Track_t ** t1;
+	ADT_MP3_Track_t ** t2;
 
-	t1 = (ADT_MP3_Track_t *) pv1;
-	t2 = (ADT_MP3_Track_t *) pv2;
-	return((int)(t1->genre - t2->genre)); /*También se podría hacer alfabéticamente*/
+	t1 = (ADT_MP3_Track_t **) pv1;
+	t2 = (ADT_MP3_Track_t **) pv2;
+	return((int)((*t1)->genre - (*t2)->genre)); /*También se podría hacer alfabéticamente*/
 }
 
 status_t ADT_MP3_Track_export_as_CSV(const void * pv, void * pcontext, FILE * fo)

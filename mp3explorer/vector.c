@@ -147,7 +147,7 @@ status_t ADT_Vector_sort(ADT_Vector_t * v)
 {
 	if (v == NULL)
 		return ERROR_NULL_POINTER;
-	qsort(v->elements, v-> size,sizeof(void *), v->comparator);
+	qsort(v->elements, v->size ,sizeof(void *), v->comparator);
 	return OK;
 }
 

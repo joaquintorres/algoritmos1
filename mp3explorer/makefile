@@ -1,3 +1,7 @@
+#
+#
+#
+#
 CFLAGS=-ansi -pedantic -Wall
 CC=gcc
 all: mp3explorer
