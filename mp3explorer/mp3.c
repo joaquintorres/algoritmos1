@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "mp3.h"
+#include "types.h"
 
 /*CONSTANTES DEL ESTÁNDAR ID3V1*/
 #define MP3_HEADER_SIZE	  128
@@ -197,12 +198,13 @@ status_t ADT_MP3_Track_new(ADT_MP3_Track_t ** p)
 	return OK;
 }
 
-status_t ADT_MP3_Track_delete(ADT_MP3_Track_t ** p)
+status_t ADT_MP3_Track_delete(void * p)
 {
 	if (p == NULL)
 		return ERROR_NULL_POINTER;
-	free(*p);
-	*p = NULL;
+	
+	free(*(ADT_MP3_Track_t **)p);
+	*(ADT_MP3_Track_t **)p = NULL;
 	return OK;
 }
 
@@ -371,11 +373,14 @@ int ADT_MP3_Track_compare_by_genre(const void * pv1, const void * pv2)
 	return((int)(t1->genre - t2->genre)); /*También se podría hacer alfabéticamente*/
 }
 
-status_t ADT_MP3_Track_export_as_CSV(const ADT_MP3_Track_t * p, void * pcontext, FILE * fo)
+status_t ADT_MP3_Track_export_as_CSV(const void * pv, void * pcontext, FILE * fo)
 {
 	char del;
-	if (p == NULL || fo == NULL || pcontext == NULL)
+	ADT_MP3_Track_t * p;
+	if (pv == NULL || fo == NULL || pcontext == NULL)
 		return ERROR_NULL_POINTER;
+
+	p = (ADT_MP3_Track_t *) pv;
 	del = *(char *)pcontext;
 
 	fprintf(fo,"%s", p->title);
@@ -390,13 +395,14 @@ status_t ADT_MP3_Track_export_as_CSV(const ADT_MP3_Track_t * p, void * pcontext,
 	return OK;
 }
 
-status_t ADT_MP3_Track_export_as_XML(const ADT_MP3_Track_t * p, void * pcontext, FILE * fo)
+status_t ADT_MP3_Track_export_as_XML(const void * pv, void * pcontext, FILE * fo)
 {
 	char * tag_content_track;
-	if(p == NULL || fo == NULL || pcontext == NULL)
+	ADT_MP3_Track_t * p;
+	if(pv == NULL || fo == NULL || pcontext == NULL)
 		return ERROR_NULL_POINTER;
 	tag_content_track = (char *)pcontext;
-
+	p = (ADT_MP3_Track_t *) pv;
 	fprintf(fo,"\t%s%s%s\n", "<",tag_content_track,">");
 	/*se usa %s para imprimir el caracter '<' para que puedan agregársele
 	  eventuales modificaciones.*/

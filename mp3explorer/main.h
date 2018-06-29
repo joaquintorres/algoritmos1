@@ -19,11 +19,11 @@
 #define CMD_ARG_OUTPUT_TOKEN_VALUE 6
 #define CMD_ARG_OUTPUT_FLAG "-o"
 /*FORMATOS DE SALIDA*/
-#define MAX_FORMATS 3
+#define MAX_FORMATS 2
 
 #define ARG_FMT_CSV "csv"
 #define ARG_FMT_XML "xml"
-#define ARG_FMT_HTML "html"
+
 /*CRITERIOS DE ORDENAMIENTO*/
 #define MAX_SORT_CRITERIA 3
 
@@ -31,5 +31,6 @@
 #define ARG_SORT_ARTIST "artist"
 #define ARG_SORT_GENRE "genre"
 
-/*PROTOTIPOS*/status_t validate_arguments(size_t argc, char * argv[], format_t * format, sort_t * sort, char * output_filename[], char ***input_files, size_t * len);
+/*PROTOTIPOS*/
+status_t validate_arguments(size_t argc, char * argv[], format_t * format, sort_t * sort, char * output_filename[], char ***input_files, size_t * len);
 #endif

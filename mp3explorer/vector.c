@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "vector.h"
+#include "types.h"
 
 #define INIT_CHOP 20
 #define CHOP_SIZE 10

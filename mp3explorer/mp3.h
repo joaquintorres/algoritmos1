@@ -1,30 +1,12 @@
+#ifndef MP3__H
+#define MP3__H
+
 #include <stdio.h>
+#include "types.h"
 
-#define LEXEM_START_TITLE   3
-#define LEXEM_SPAN_TITLE   30
-
-#define LEXEM_START_ARTIST 33
-#define LEXEM_SPAN_ARTIST  30
-
-/*Se declara un tema como ADT_MP3_Track * track;*/
-typedef enum {
-	OK,
-	ERROR_NULL_POINTER,
-	ERROR_MEMORY,
-	ERROR_NUMBER_OF_ARGUMENTS,
-	ERROR_INVALID_FLAG,
-	ERROR_INVALID_DATA,
-	ERROR_NUMBER_OF_FIELDS,
-	ERROR_OUT_OF_BOUNDS,
-	ERROR_INPUT_FILE,
-	ERROR_OUTPUT_FILE,
-	ERROR_DISK_SPACE
-} status_t; /*En types.h*/
-
-typedef enum {
-	FALSE,
-	TRUE
-} bool_t;
+/*Tamaño máximo de una cadena de caracteres para el título y artista de un tema.*/
+#define MAX_TITLE   30
+#define MAX_ARTIST  30
 
 struct ADT_MP3_Track_t;
 typedef struct ADT_MP3_Track_t ADT_MP3_Track_t;
@@ -34,7 +16,7 @@ typedef struct ADT_MP3_Track_t ADT_MP3_Track_t;
 status_t ADT_MP3_Track_new(ADT_MP3_Track_t ** p);
 
 /*Borra un tema ya creado. IMPORTANTE: borrar un tema declarado pero no inicializado resulta en error*/
-status_t ADT_MP3_Track_delete(ADT_MP3_Track_t ** p);
+status_t ADT_MP3_Track_delete(void * p);
 
 /*Crea un nuevo tema a partir de los parámetros título, artista y género*/
 status_t ADT_MP3_Track_new_from_parameters(ADT_MP3_Track_t ** p, const char * title, const char * artist, const char * genre);
@@ -77,9 +59,9 @@ status_t ADT_MP3_Track_set_artist(ADT_MP3_Track_t ** p, const char * artist);
 status_t ADT_MP3_Track_set_genre(ADT_MP3_Track_t ** p, const char * genre);
 
 /*Exporta el tema en formato CSV. el delimitador(char) debe pasarse como puntero en pcontext.*/
-status_t ADT_MP3_Track_export_as_CSV(const ADT_MP3_Track_t * p, void * pcontext, FILE * fo);
+status_t ADT_MP3_Track_export_as_CSV(const void * pv, void * pcontext, FILE * fo);
 /*Exporta el tema en formato XML*/
-status_t ADT_MP3_Track_export_as_XML(const ADT_MP3_Track_t * p, void * pcontext, FILE * fo);
+status_t ADT_MP3_Track_export_as_XML(const void * pv, void * pcontext, FILE * fo);
 
 /*Compara por título, devuelve un número negativo, nulo o positivo si el título de 
   t1 es menor, igual o mayor al título de t2, respectivamente*/
@@ -92,3 +74,5 @@ int ADT_MP3_Track_compare_by_artist(const void * pv1, const void * pv2);
 /*Compara por género, devuelve un número negativo, nulo o positivo si el género de 
   t1 es menor, igual o mayor al género de t2, respectivamente*/
 int ADT_MP3_Track_compare_by_genre(const void * pv1, const void * pv2);
+
+#endif

@@ -1,25 +1,11 @@
+#ifndef VECTOR__H
+#define VECTOR__H
+
 #include <stdio.h>
-#include <stdlib.h>
+#include "types.h"
 
 #define XML_HEADER "<?xml version=\"1.0\" ?>"
 #define XML_ELEMENT_TAG "tracks"
-
-typedef enum {
-	OK,
-	ERROR_NULL_POINTER,
-	ERROR_MEMORY,
-	ERROR_NUMBER_OF_ARGUMENTS,
-	ERROR_INVALID_FLAG,
-	ERROR_INVALID_BARCODE,
-	ERROR_OUT_OF_BOUNDS,
-	ERROR_OUTPUT_FILE,
-	ERROR_DISK_SPACE
-} status_t; /*En types.h*/
-
-typedef enum {
-	FALSE,
-	TRUE
-} bool_t;
 
 /*Un vector se declara como "ADT_Vector * v;". Es un vector polimórfico que contiene
 elementos como void *, pero esto no significa que pueda contener distintos tipos de
@@ -30,7 +16,7 @@ typedef struct ADT_Vector_t ADT_Vector_t;
 
 typedef int (*comparator_t)(const void *, const void *);
 typedef status_t (*destructor_t)(void *);
-typedef status_t (*printer_t)(const void *, void * pcontext, FILE * f);
+typedef status_t (*printer_t)(const void * element, void * pcontext, FILE * f);
 
 /*******************PRIMITIVAS********************/
 
@@ -91,3 +77,6 @@ status_t ADT_Vector_export_as_CSV(const ADT_Vector_t * v, void * pcontext, FILE 
 /*Exporta el vector como XML utilizando el impresor ingresado con ADT_Vector_set_printer,
  con el contexto correspondiente a este último.*/
 status_t ADT_Vector_export_as_XML(const ADT_Vector_t * v, void * pcontext, FILE * fo);
+
+
+#endif
