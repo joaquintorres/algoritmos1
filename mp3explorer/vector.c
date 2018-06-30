@@ -1,3 +1,14 @@
+/*  ***************************************************************
+	Algoritmos y Programación I - 95.11 - Curso Ing. Martín Cardozo
+	Trabajo Práctico N.° 2: Indexación automática de archivos MP3
+	Alumno: Joaquín Torres
+	Correo Electrónico: joaquintorres1997@gmail.com
+	Archivo: vector.c
+	Descripción: Programa que ordena un número arbitrario de archivos MP3
+	por un criterio especificado por el usuario y los exporta ordenados en un 
+	formato también determinado por el usuario.
+	****************************************************************/
+
 /*TDA Vector*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,9 +91,8 @@ status_t ADT_Vector_delete(ADT_Vector_t ** p)
 		return ERROR_NULL_POINTER;
 	for (i= 0; i < (*p)->size; i++)
 	{
-		if ((st = (*p)->destructor((*p)->elements[i])) != OK)
+		if ((st = (*p)->destructor(&((*p)->elements[i]))) != OK)
 			return st;
-		(*p)->elements[i] = NULL;
 	}
 	free((*p)->elements);
 	(*p)->elements = NULL;
