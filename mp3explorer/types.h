@@ -13,6 +13,10 @@
 
 #include <stdio.h>
 
+/*CONSTANTES FUNCIONES PRIVADAS*/
+#define MAX_STR 100 /*strcasecomp evita usar memoria dinámica para strings que tienen un tamaño fijo.*/
+/*******************************/
+
 typedef enum {
 	OK,
 	ERROR_NULL_POINTER,
@@ -41,5 +45,10 @@ typedef enum {
 	FALSE,
 	TRUE
 } bool_t;
+
+/*Punteros a función*/
+typedef int (*comparator_t)(const void *, const void *);
+typedef status_t (*destructor_t)(void *);
+typedef status_t (*printer_t)(const void * element, void * pcontext, FILE * f);
 
 #endif

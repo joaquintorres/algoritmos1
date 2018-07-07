@@ -15,15 +15,15 @@
 #include "mp3explorer.h"
 #include "main.h"
 
-printer_t printer_dict[MAX_FORMATS] = {
+printer_t track_exporters[MAX_FORMATS] = {
 	ADT_MP3_Track_export_as_CSV,
 	ADT_MP3_Track_export_as_XML
 };
-vector_export export_dict[MAX_FORMATS] = {
+vector_export vector_printers[MAX_FORMATS] = {
 	ADT_Vector_export_as_CSV,
 	ADT_Vector_export_as_XML
 };
-comparator_t comparator_dict[MAX_SORT_CRITERIA] = {
+comparator_t track_comparators[MAX_SORT_CRITERIA] = {
 	ADT_MP3_Track_compare_by_title,
 	ADT_MP3_Track_compare_by_artist,
 	ADT_MP3_Track_compare_by_genre
@@ -57,15 +57,28 @@ status_t mp3_explorer(format_t format, sort_t sort, const char * output_filename
 	/*INICIALIZACIÖN DEL VECTOR*/
 	if ((st = ADT_Vector_new(&vector)) != OK)
 		return st;
+
 	if ((st = ADT_Vector_set_destructor(vector,ADT_MP3_Track_delete)) != OK)
+	{
+		ADT_Vector_delete(&vector);
 		return st;
-	if ((st = ADT_Vector_set_printer(vector,printer_dict[format])) != OK)
+	}
+	if ((st = ADT_Vector_set_printer(vector,track_exporters[format])) != OK)
+	{
+		ADT_Vector_delete(&vector);
 		return st;
-	if ((st = ADT_Vector_set_comparator(vector,comparator_dict[sort])) != OK)
+	}
+	if ((st = ADT_Vector_set_comparator(vector,track_comparators[sort])) != OK)
+	{
+		ADT_Vector_delete(&vector);
 		return st;
+	}
 
 	if ((fo = fopen(output_filename, "wt")) == NULL) /*La salida es en formato texto.*/
+	{
+		ADT_Vector_delete(&vector);
 		return ERROR_OUTPUT_FILE;
+	}
 	/*ciclo de extracción de datos*/
 	for (i = 0; i < len; i++)
 	{
@@ -73,26 +86,42 @@ status_t mp3_explorer(format_t format, sort_t sort, const char * output_filename
 		if ((fi = fopen(input_files[i], "rb")) == NULL)
 		{
 			fclose(fo);
+			ADT_Vector_delete(&vector);
 			return ERROR_INPUT_FILE;
 		}
 		/*PROCESAMIENTO*/
 
-		if ((st = ADT_MP3_Track_load(&track, fi)) != OK)
+		if ((st = ADT_MP3_Track_load_info(&track, fi)) != OK)
+		{
+			ADT_Vector_delete(&vector);
 			return st;
+		}
 		if ((st = ADT_Vector_append_element(&vector, track)) != OK)
+		{
+			ADT_Vector_delete(&vector);
 			return st;
+		}
 
 		/*CIERRE*/
 		if (fclose(fi) == EOF)
+		{
+			ADT_Vector_delete(&vector);
 			return ERROR_DISK_SPACE;
+		}
 	}
 	/*ORDENAMIENTO*/
 	if ((st = ADT_Vector_sort(vector)) != OK)
+	{
+		ADT_Vector_delete(&vector);
 		return st;
+	}
 
 	/*EXPORTACIÓN*/
-	if ((st = export_dict[format](vector,pcontext, fo)) != OK)
-			return st;
+	if ((st = vector_printers[format](vector,pcontext, fo)) != OK)
+	{
+		ADT_Vector_delete(&vector);
+		return st;
+	}
 	/*DESTRUCCIÓN*/
 	if ((st = ADT_Vector_delete(&vector)) != OK)
 		return st;

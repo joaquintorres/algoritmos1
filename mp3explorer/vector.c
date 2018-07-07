@@ -32,6 +32,7 @@ struct ADT_Vector_t{
 status_t ADT_Vector_new(ADT_Vector_t ** p)
 {
 	size_t i;
+	
 	if (p == NULL)
 		return ERROR_NULL_POINTER;
 	if ((*p = (ADT_Vector_t *) malloc(sizeof(ADT_Vector_t))) == NULL)
@@ -61,6 +62,7 @@ status_t ADT_Vector_new(ADT_Vector_t ** p)
 status_t ADT_Vector_append_element(ADT_Vector_t ** p, void * new_element)
 {
 	void ** aux;
+
 	if (p == NULL || new_element == NULL)
 		return ERROR_NULL_POINTER;
 
@@ -114,13 +116,36 @@ void * ADT_Vector_get_element(const ADT_Vector_t * v, int position)
 status_t ADT_Vector_set_element(ADT_Vector_t ** p, int position, void * new_element)
 {
 	status_t st;
+	void ** aux;
+
 	if (p == NULL || new_element == NULL)
 		return ERROR_NULL_POINTER;
+	
 	if (position > ((*p)->size))
-		return ERROR_OUT_OF_BOUNDS;
+	{
+		if (position > ((*p)->alloc_size))
+		{
+			(*p)->alloc_size = position + CHOP_SIZE;
+			if ((aux = (void **) realloc((*p)->elements, ((*p)->alloc_size) * sizeof(void *))) == NULL)
+			{
+				ADT_Vector_delete(p);
+				return ERROR_MEMORY;
+			}
+			(*p)->elements = aux;
+			(*p)->size = position;
+			(*p)->elements[position] = new_element;
+			return OK;
+		}else 
+		{
+			(*p)->size = position;
+			(*p)->elements[position] = new_element;
+			return OK;
+		} /*se toma este caso para evitar llamar al destructor sobre memoria restringida*/
+	}
+
 	if ((st = (*p)->destructor((*p)->elements[position])) != OK) /*destruye el elemento*/
 		return st;
-	(*p)->elements[position] = new_element;
+	(*p)->elements[position] = new_element; /*el tamaño no se modifica.*/
 	return OK;
 }
 

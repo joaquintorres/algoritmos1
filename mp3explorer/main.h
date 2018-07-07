@@ -37,10 +37,16 @@
 /*CRITERIOS DE ORDENAMIENTO*/
 #define MAX_SORT_CRITERIA 3
 
-#define ARG_SORT_NAME "name"
-#define ARG_SORT_ARTIST "artist"
-#define ARG_SORT_GENRE "genre"
+#define CMD_ARG_SORT_BY_NAME "name"
+#define CMD_ARG_SORT_BY_ARTIST "artist"
+#define CMD_ARG_SORT_BY_GENRE "genre"
+
+typedef struct {
+	format_t format;
+	sort_t sort;
+	char * output_filename;
+} config_t;
 
 /*PROTOTIPOS*/
-status_t validate_arguments(size_t argc, char * argv[], format_t * format, sort_t * sort, char * output_filename[], char ***input_files, size_t * len);
+status_t validate_arguments(size_t argc, char * argv[], config_t * config, char ***input_files, size_t * len);
 #endif

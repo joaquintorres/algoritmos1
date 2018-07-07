@@ -24,9 +24,6 @@ EL MISMO PARA TODOS. */
 struct ADT_Vector_t;
 typedef struct ADT_Vector_t ADT_Vector_t;
 
-typedef int (*comparator_t)(const void *, const void *);
-typedef status_t (*destructor_t)(void *);
-typedef status_t (*printer_t)(const void * element, void * pcontext, FILE * f);
 typedef status_t (*vector_export)(const ADT_Vector_t * v, void * pcontext, FILE * fo);
 /*******************PRIMITIVAS********************/
 
@@ -37,12 +34,7 @@ status_t ADT_Vector_new(ADT_Vector_t ** p);
 status_t ADT_Vector_delete(ADT_Vector_t ** p);
 
 /*Inserta un elemento new_element al final del vector. Nótese que se recibe el argumento COMO PUNTERO
-y, por lo tanto, deben pasarse elementos nuevos como tales, incluso elementos de tipo básico.
-Por ejemplo, para hacer un vector que contenga enteros estos deben pasarse como punteros a entero.
-Como consecuencia, en este caso particular, cambiar el valor de la variable "fuera" del vector provocaría 
-un cambio "dentro" del vector. Por esta razón, no es recomendable tratar un vector como si fuera un arreglo:
-si, por ejemplo, se hace un ciclo for que aumente el valor de int i e inserte su dirección de memoria como 
-elemento del vector, el vector terminará teniendo todos sus elementos apuntando a i en su último valor.*/
+y, por lo tanto, deben pasarse elementos nuevos como tales, incluso elementos de tipo básico.*/
 status_t ADT_Vector_append_element(ADT_Vector_t ** p, void * new_element);
 
 /*Devuelve el elemento de la posición position del vector. En caso de no resultar exitosa, devuelve NULL,

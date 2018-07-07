@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<tracks>
+	<track>
+		<title> Land of Confusion</title>
+		<artist> GENESIS</artist>
+		<genre> Pop</genre>
+	</track>
+	<track>
+		<title> Tocata y fuga</title>
+		<artist> Bach</artist>
+		<genre> Classical</genre>
+	</track>
+	<track>
+		<title> Ñandú</title>
+		<artist> Ósmosis</artist>
+		<genre> Rock & Roll</genre>
+	</track>
+	<track>
+		<title> Las cuatro estaciones</title>
+		<artist> Vivaldi</artist>
+		<genre> Easy Listening</genre>
+	</track>
+	<track>
+		<title> Ariadna</title>
+		<artist> Les Luthiers</artist>
+		<genre> Opera</genre>
+	</track>
+	<track>
+		<title> parsifal</title>
+		<artist> richard wagner</artist>
+		<genre> Opera</genre>
+	</track>
+	<track>
+		<title> Das Rheingold</title>
+		<artist> Richard Wagner</artist>
+		<genre> Opera</genre>
+	</track>
+</tracks>

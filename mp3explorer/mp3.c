@@ -11,55 +11,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 #include "mp3.h"
 #include "types.h"
-
-/*CONSTANTES DEL ESTÁNDAR ID3V1*/
-#define MP3_HEADER_SIZE	  128
-
-#define LEXEM_START_TAG     0
-#define LEXEM_SPAN_TAG      3
-
-#define LEXEM_START_TITLE   3
-#define LEXEM_SPAN_TITLE   30
-
-#define LEXEM_START_ARTIST 33
-#define LEXEM_SPAN_ARTIST  30
-
-#define LEXEM_START_ALBUM  63  /*Se dejan las posiciones de las otras características*/
-#define LEXEM_SPAN_ALBUM   30  /*en caso de que se desee extender la funcionalidad*/
-
-#define LEXEM_START_YEAR   93
-#define LEXEM_SPAN_YEAR     4
-
-#define LEXEM_START_COMMENT 97
-#define LEXEM_SPAN_COMMENT  30
-
-#define LEXEM_START_GENRE  127
-#define LEXEM_SPAN_GENRE     1
-/*******************************/
-
-/*DICCIONARIO DE GÉNEROS*/
-#define MAX_GENRE 125
-#define MIN_GENRE 0
-#define UNKNOWN_GENRE_STR "Unknown"
-
-
-/***********************/
-/*PARÁMETROS XML*/
-#define XML_TAG_CONTENT_TITLE  "title"
-#define XML_TAG_CONTENT_ARTIST "artist"
-#define XML_TAG_CONTENT_GENRE  "genre"
-
-/*CONSTANTES FUNCIONES PRIVADAS*/
-#define MAX_STR 100 /*_compare_strings evita usar memoria dinámica para strings que tienen un tamaño fijo.*/
-
-/*PROTOTIPOS FUNCIONES PRIVADAS*/
-status_t _get_mp3_header_parameters (char * title,char * artist,char * genre,FILE * fo);
-status_t _strdupl(const char * s, char ** t);
-int _compare_strings(const char * a, const char * b);
-/*******************************/
+#include "utils.h"
 
 char * genre_dict[MAX_GENRE+1] = {
 	"Blues",
@@ -194,17 +148,19 @@ struct ADT_MP3_Track_t {
 	char title[LEXEM_SPAN_TITLE+1];
 	char artist[LEXEM_SPAN_ARTIST+1];
 	char genre;
+	unsigned short year;
 };
 
 status_t ADT_MP3_Track_new(ADT_MP3_Track_t ** p)
 {
 	if (p == NULL)
 		return ERROR_NULL_POINTER;
+
 	if ((*p = (ADT_MP3_Track_t *) malloc(sizeof(ADT_MP3_Track_t))) == NULL)
 		return ERROR_MEMORY;
 	(*p)->title[0] = '\0';
 	(*p)->artist[0] = '\0';
-	(*p)->genre = MAX_GENRE + 1;
+	(*p)->genre = UNKNOWN_GENRE;
 	return OK;
 }
 
@@ -221,6 +177,7 @@ status_t ADT_MP3_Track_new_from_parameters(ADT_MP3_Track_t ** p, const char * ti
 {
 	size_t i; 
 	bool_t found; /*variables auxiliares*/
+	
 	if (p == NULL || title == NULL || artist == NULL || genre == NULL)
 		return ERROR_NULL_POINTER;
 	if (strlen(title) > LEXEM_SPAN_TITLE || strlen(artist) > LEXEM_SPAN_ARTIST)
@@ -256,7 +213,7 @@ status_t ADT_MP3_Track_new_from_parameters(ADT_MP3_Track_t ** p, const char * ti
 	return OK;
 }
 
-status_t ADT_MP3_Track_load(ADT_MP3_Track_t ** p, FILE * fo)
+status_t ADT_MP3_Track_load_info(ADT_MP3_Track_t ** p, FILE * fo)
 {
 	char title[LEXEM_SPAN_TITLE];
 	char artist[LEXEM_SPAN_ARTIST];
@@ -269,7 +226,7 @@ status_t ADT_MP3_Track_load(ADT_MP3_Track_t ** p, FILE * fo)
 	if ((*p = (ADT_MP3_Track_t *) malloc(sizeof(ADT_MP3_Track_t))) == NULL)
 		return ERROR_MEMORY;
 
-	if ((st = _get_mp3_header_parameters(title,artist,&genre,fo))!=OK)
+	if ((st = _get_mp3_header_info(title,artist,&genre,fo))!=OK)
 		return st;
 
 	strcpy((*p)->title, title);
@@ -281,18 +238,24 @@ status_t ADT_MP3_Track_load(ADT_MP3_Track_t ** p, FILE * fo)
 char * ADT_MP3_Track_get_title(const ADT_MP3_Track_t * p)
 {
 	char * aux;
+	status_t st;
+	
 	if (p == NULL)
 		return NULL;
-	_strdupl(p->title,&aux);
+	if ((st = strdupl(p->title,&aux)) != OK)
+		return NULL;
 	return aux;	
 }
 /*USA MEMORIA DINAMICA. LIBERAR.*/
 char * ADT_MP3_Track_get_artist(const ADT_MP3_Track_t * p)
 {
 	char * aux;
+	status_t st;
+	
 	if (p == NULL)
 		return NULL;
-	_strdupl(p->artist,&aux);
+	if ((st = strdupl(p->artist,&aux)) != OK)
+		return NULL;
 	return aux;	
 }
 
@@ -325,28 +288,13 @@ status_t ADT_MP3_Track_set_artist(ADT_MP3_Track_t ** p, const char * artist)
 	return OK;
 }
 
-status_t ADT_MP3_Track_set_genre(ADT_MP3_Track_t ** p, const char * genre)
+status_t ADT_MP3_Track_set_genre(ADT_MP3_Track_t ** p, char genre)
 {
-	bool_t found;
-	size_t i;
-	if (p == NULL || genre == NULL)
+	if (p == NULL)
 		return ERROR_NULL_POINTER;
-	/*búsqueda del byte de género*/
-	found = FALSE;
-	while (found == FALSE)
-	{
-		for (i = MIN_GENRE; i < MAX_GENRE + 1 ; i++)
-		{
-			if (strcmp(genre,genre_dict[i]) == 0)
-			{
-				
-				(*p)->genre = (char)i;     /*Si se ponen mal los límites del ciclo e i es mayor al valor*/
-				found = TRUE;				/*máximo de char, el valor del byte de genre va a ser negativo.*/
-			}							   /*Las funciones que exportan genre como cadena de caracteres debe validar esto.*/
-		}
-		if (found == FALSE)
-			return ERROR_OUT_OF_BOUNDS; /*no borra lo que ya estaba, devuelve un error*/
-	}
+	
+	(*p)->genre = genre;
+	
 	return OK;
 }
 
@@ -358,7 +306,7 @@ int ADT_MP3_Track_compare_by_title(const void * pv1, const void * pv2)
 
 	t1 = (ADT_MP3_Track_t **) pv1;
 	t2 = (ADT_MP3_Track_t **) pv2;
-	return (_compare_strings((*t1)->title,(*t2)->title));
+	return (strcasecomp((*t1)->title,(*t2)->title));
 }
 
 int ADT_MP3_Track_compare_by_artist(const void * pv1, const void * pv2)
@@ -368,7 +316,7 @@ int ADT_MP3_Track_compare_by_artist(const void * pv1, const void * pv2)
 
 	t1 = (ADT_MP3_Track_t **) pv1;
 	t2 = (ADT_MP3_Track_t **) pv2;
-	return (_compare_strings((*t1)->artist,(*t2)->artist));
+	return (strcasecomp((*t1)->artist,(*t2)->artist));
 }
 
 int ADT_MP3_Track_compare_by_genre(const void * pv1, const void * pv2)
@@ -385,6 +333,7 @@ status_t ADT_MP3_Track_export_as_CSV(const void * pv, void * pcontext, FILE * fo
 {
 	char del;
 	ADT_MP3_Track_t * p;
+	
 	if (pv == NULL || fo == NULL || pcontext == NULL)
 		return ERROR_NULL_POINTER;
 
@@ -407,6 +356,7 @@ status_t ADT_MP3_Track_export_as_XML(const void * pv, void * pcontext, FILE * fo
 {
 	char * tag_content_track;
 	ADT_MP3_Track_t * p;
+	
 	if(pv == NULL || fo == NULL || pcontext == NULL)
 		return ERROR_NULL_POINTER;
 	tag_content_track = (char *)pcontext;
@@ -434,7 +384,7 @@ status_t ADT_MP3_Track_export_as_XML(const void * pv, void * pcontext, FILE * fo
 	return OK;
 }
 
-status_t _get_mp3_header_parameters (char * title,char * artist,char * genre,FILE * fo)
+status_t _get_mp3_header_info (char * title,char * artist,char * genre,FILE * fo)
 {
 	char buf[MP3_HEADER_SIZE];
 	char header[MP3_HEADER_SIZE];
@@ -460,36 +410,4 @@ status_t _get_mp3_header_parameters (char * title,char * artist,char * genre,FIL
 	*genre = buf[0];
 
 	return OK;
-}
-
-status_t _strdupl(const char * s, char ** t)
-{
-	size_t i;
-
-	if (s == NULL || t == NULL)
-		return ERROR_NULL_POINTER;
-	if ((*t = (char *) malloc((strlen(s)+1)*sizeof(char))) == NULL)
-		return ERROR_MEMORY;
-	for (i = 0;((*t)[i] = s[i]);i++);
-	return OK;
-}
-
-/*Compara cadenas de caracteres no arbitrariamente largas, pero sin hacer distinciones
-entre minúsculas y mayúsculas. Así, "Pink Floyd", "pink floyd" y "PiNK fLoYD" son "iguales"*/ 
-int _compare_strings(const char * a, const char * b)
-{
-	size_t i;
-	char  low_a[MAX_STR]; /*se evita el uso de memoria estática, útil por*/
-	char  low_b[MAX_STR];
-	/*se crea una copia de los argumentos*/
-	for (i = 0; (low_a[i] = a[i]); i++);
-	for (i = 0; (low_b[i] = b[i]); i++);
-
-	/*se pasan las copias a minúsculas*/
-	for (i = 0; i < strlen(low_a); i++)
-		low_a[i] = tolower(low_a[i]);
-	for (i = 0; i < strlen(low_b); i++)
-		low_b[i] = tolower(low_b[i]);
-
-	return (strcmp(low_a,low_b));
 }
